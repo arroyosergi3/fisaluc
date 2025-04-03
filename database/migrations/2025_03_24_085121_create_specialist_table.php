@@ -12,17 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('specialists', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('physio');
-            $table->unsignedBigInteger('patient');
-            $table->unsignedBigInteger('treatment');
-            $table->date('date');
-            $table->time('time');
             $table->foreign('physio')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('patient')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('treatment');
             $table->foreign('treatment')->references('id')->on('treatments')->onDelete('cascade')->onUpdate('cascade');
-
             $table->timestamps();
         });
     }
@@ -33,6 +28,6 @@ return new class extends Migration
     public function down(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('specialists');
     }
 };
