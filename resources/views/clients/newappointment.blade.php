@@ -17,21 +17,12 @@
 
                     <form class="max-w-sm mx-auto" method="POST" action="{{ route('storedappointment') }}">
                         @csrf
-
-                        <!-- DOS SELECT -->
-
+                        {{-- Formulario con Livewire --}}
                         @livewire('treatment-selector')
-
                     <button type="submit" class=" mt-4  px-3 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:text-teal-500  dark:hover:text-white dark:bg-neutral-50 dark:hover:bg-teal-500 dark:focus:ring-blue-800" > Pedir Cita </button>
                     </form>
                     @if ($errors->any())
-    <div>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+
 @endif
 
 

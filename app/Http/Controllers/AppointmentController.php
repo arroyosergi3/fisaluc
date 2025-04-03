@@ -42,7 +42,7 @@ class AppointmentController extends Controller
             'time' => 'required',
         ], [
             'physio.required' => 'El campo de fisioterapeuta es obligatorio.',
-            'treatment.required' => 'El campo de tratamiento es obligatorio.',
+            'treat.required' => 'El campo de tratamiento es obligatorio.',
             'date.required' => 'La fecha es obligatoria.',
             'date.date' => 'La fecha no es válida.',
             'time.required' => 'La hora es obligatoria.',
