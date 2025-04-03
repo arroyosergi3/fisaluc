@@ -23,7 +23,8 @@ Route::middleware('auth')->group(function () {
 // MIS RUTAS
 Route::get('/services', [TreatmentController::class, 'index'])->name('treats');
 
-Route::get('/get-appointment', [AppointmentController::class, 'index'])->name('newappointment');
+Route::get('/get-appointment', [AppointmentController::class, 'create'])->name('newappointment');
+Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment');
 
 Route::get('auth/google', [GoogleController::class, 'googlepage']);
 Route::get('auth/google/callback', [GoogleController::class, 'googlecallback']);
