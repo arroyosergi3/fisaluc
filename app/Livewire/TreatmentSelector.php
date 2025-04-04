@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Specialist;
 use App\Models\Treatment;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -43,6 +44,13 @@ class TreatmentSelector extends Component
     {
         // Actualizar las horas ocupadas cada vez que se cambie la fecha
         $this->updateBusyHours();
+        $dayOfWeek = Carbon::parse($date)->dayOfWeek; // 0 = domingo, 6 = sábado
+
+        if ($dayOfWeek === Carbon::SUNDAY || $dayOfWeek === Carbon::SATURDAY) {
+            $this->addError('date', 'No se puede seleccionar sábados ni domingos.');
+        } else {
+            $this->resetErrorBag('date');
+        }
     }
 
     public function updateBusyHours()

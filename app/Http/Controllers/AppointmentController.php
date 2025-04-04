@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Treatment;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +39,15 @@ class AppointmentController extends Controller
         $request->validate([
             'physio' => 'required',
             'treat' => 'required',
-            'date' => 'required|date',
+            'date' => [
+            'required', 'date',
+            function ($attribute, $value, $fail) {
+                $dayOfWeek = Carbon::parse($value)->dayOfWeek;
+                if ($dayOfWeek === Carbon::SATURDAY || $dayOfWeek === Carbon::SUNDAY) {
+                    $fail('No se puede seleccionar sábados ni domingos.');
+                }
+            },
+        ],
             'time' => 'required',
         ], [
             'physio.required' => 'El campo de fisioterapeuta es obligatorio.',
