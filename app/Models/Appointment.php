@@ -13,4 +13,10 @@ class Appointment extends Model
         'date',
         'time',
     ];
+
+public function treatment()
+{
+    return $this->belongsTo(Treatment::class);
+}
+
 }

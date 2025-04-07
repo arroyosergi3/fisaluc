@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleCalendarController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +30,14 @@ Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('
 
 Route::get('auth/google', [GoogleController::class, 'googlepage']);
 Route::get('auth/google/callback', [GoogleController::class, 'googlecallback']);
+
+
+Route::get('/google-calendar/connect', [GoogleCalendarController::class, 'redirect'])->name('google.calendar.connect');
+Route::get('/google-calendar/callback', [GoogleCalendarController::class, 'callback'])->name('google.calendar.callback');
+
+
+Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->name('addToCalendar');
+
 
 
 require __DIR__.'/auth.php';

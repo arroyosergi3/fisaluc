@@ -26,6 +26,8 @@ class User extends Authenticatable
         'birthday',
         'role',
         'password',
+        'google_access_token',
+        'google_refresh_token',
     ];
 
     /**
@@ -50,4 +52,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+public function routeNotificationForGoogleCalendar()
+{
+    return [
+        'access_token' => $this->google_access_token,
+        'refresh_token' => $this->google_refresh_token,
+        'token_expiry' => $this->google_token_expiry,
+    ];
+}
+
 }

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('google_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('google_access_token')->nullable();
+            $table->string('google_refresh_token')->nullable();
             $table->string('phone')->nullable();
             $table->date('birthday')->nullable();
             $table->string('role')->default('basic');
