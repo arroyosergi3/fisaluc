@@ -32,7 +32,6 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
-        // dd("va a  validar"); ESTE SI LO HACE
         $request->validate([
             'physio' => 'required',
             'treat' => 'required',
@@ -55,9 +54,6 @@ class AppointmentController extends Controller
             'date.date' => 'La fecha no es válida.',
             'time.required' => 'La hora es obligatoria.',
         ]);
-
-
-
         try {
             $appointment = Appointment::create([
                 'physio' => $request->physio,
@@ -70,7 +66,6 @@ class AppointmentController extends Controller
             dd($th->getMessage());
             return to_route('dashboard')->with('msg', 'hay errores tete');
         }
-
 /*
         $calendar = new GoogleCalendarService();
 

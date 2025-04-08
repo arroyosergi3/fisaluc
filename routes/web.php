@@ -6,7 +6,9 @@ use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleCalendarController;
-
+use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsAdminOrPhysio;
+use App\Http\Middleware\IsPhysio;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,7 +25,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // MIS RUTAS
-Route::get('/services', [TreatmentController::class, 'index'])->name('treats');
+Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
 
 Route::get('/get-appointment', [AppointmentController::class, 'create'])->name('newappointment');
 Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment');
@@ -37,6 +39,12 @@ Route::get('/google-calendar/callback', [GoogleCalendarController::class, 'callb
 
 
 Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->name('addToCalendar');
+
+
+Route::resource('user', ProfileController::class)->middleware(IsAdmin::class);
+
+Route::resource('treatment', TreatmentController::class)->middleware(IsAdminOrPhysio::class);
+Route::resource('appointment', TreatmentController::class)->middleware(IsAdminOrPhysio::class);
 
 
 

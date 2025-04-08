@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('description');
             $table->decimal('price');
-            $table->string('pic');
+            $table->string('pic')->default('img_treat/default.png');
             $table->timestamps();
         });
     }

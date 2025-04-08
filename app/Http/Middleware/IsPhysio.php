@@ -16,7 +16,7 @@ class IsPhysio
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->rol === 'physio') {
+        if (Auth::check() && Auth::user()->role === 'physio') {
         return $next($request);
     }
 

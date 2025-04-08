@@ -28,6 +28,14 @@
                     </x-nav-link>
 
 
+                <!-- Control Tratamientos Link -->
+                    @if(Auth::user()->role == 'admin' || Auth::user()->role == 'physio')
+                    <x-nav-link :href="route('treatment.index')" :active="request()->routeIs('treatment.index')">
+                        {{ __('CRUD Tratamientos') }}
+                    </x-nav-link>
+
+                    @endif
+
                 </div>
             </div>
 
@@ -111,3 +119,5 @@
         </div>
     </div>
 </nav>
+
+
