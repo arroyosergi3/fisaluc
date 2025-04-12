@@ -15,7 +15,11 @@ class AppointmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {}
+    public function index() {
+
+        $appointments = Appointment::all();
+        return view('appointment.index', compact('appointments'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -25,6 +29,15 @@ class AppointmentController extends Controller
         $physios = User::all()->where('role', 'physio');
         $treats = Treatment::all();
         return view('clients.newappointment')->with(['physios' => $physios, 'treats' => $treats]);
+    }
+
+    public function createForPhysio()
+    {
+        dd('llamo al metodo por lo menos');
+        $physios = User::all()->where('role', 'physio');
+        $users = User::all()->where('role', 'basic');
+        $treats = Treatment::all();
+        return view('appointment.create')->with(['physios' => $physios, 'treats' => $treats, 'users' => $users]);
     }
 
     /**
@@ -139,7 +152,7 @@ return redirect()->route('dashboard')->with('show_modal', true);
      */
     public function show(Appointment $appointment)
     {
-        //
+        return view('appointment.show', compact('appointment'));
     }
 
     /**
@@ -147,7 +160,7 @@ return redirect()->route('dashboard')->with('show_modal', true);
      */
     public function edit(Appointment $appointment)
     {
-        //
+        return view('appointment.edit', compact('appointment'));
     }
 
     /**
@@ -155,7 +168,19 @@ return redirect()->route('dashboard')->with('show_modal', true);
      */
     public function update(Request $request, Appointment $appointment)
     {
-        //
+        $request->validate([
+            'physio' => 'required|string|max:255',
+            'patient' => 'required|string|max:255',
+            'treatment' => 'required|string|max:255',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
+        ]);
+
+        $data = $request->only(['physio', 'patient', 'treatment', 'date', 'time']);
+
+        $appointment->update($data);
+
+        return redirect()->route('appointment.index')->with('updateSuccess', 'Cita actualizada correctamente.');
     }
 
     /**
@@ -163,6 +188,7 @@ return redirect()->route('dashboard')->with('show_modal', true);
      */
     public function destroy(Appointment $appointment)
     {
-        //
+        $appointment->delete();
+        return redirect()->route('appointment.index')->with('success', 'Cita eliminada correctamente.');
     }
 }

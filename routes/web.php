@@ -44,8 +44,8 @@ Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 
 Route::resource('user', ProfileController::class)->middleware(IsAdmin::class);
 
 Route::resource('treatment', TreatmentController::class)->middleware(IsAdminOrPhysio::class);
-Route::resource('appointment', TreatmentController::class)->middleware(IsAdminOrPhysio::class);
-
+Route::resource('appointment', AppointmentController::class)->middleware(IsAdminOrPhysio::class);
+Route::get('appointment/createForPhysio', [AppointmentController::class, 'createForPhysio'])->middleware(IsAdminOrPhysio::class)->name('createForPhysio');
 
 
 require __DIR__.'/auth.php';
