@@ -18,36 +18,36 @@
 
                         {{-- Selector de fisioterapeuta --}}
                         <div>
-                            <label for="physio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fisioterapeuta</label>
-                            <select id="physio" name="physio" required
+                            <label for="physio_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fisioterapeuta</label>
+                            <select id="physio_id" name="physio_id" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                                 <option value="">Selecciona un fisioterapeuta</option>
                                 @foreach ($physios as $physio)
-                                    <option value="{{ $physio->name }}">{{ $physio->name }}</option>
+                                    <option value="{{ $physio->id }}">{{ $physio->name }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         {{-- Selector de paciente --}}
                         <div>
-                            <label for="patient" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Paciente</label>
-                            <select id="patient" name="patient" required
+                            <label for="patient_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Paciente</label>
+                            <select id="patient_id" name="patient_id" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                                 <option value="">Selecciona un paciente</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->name }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         {{-- Selector de tratamiento --}}
                         <div>
-                            <label for="treatment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tratamiento</label>
-                            <select id="treatment" name="treatment" required
+                            <label for="treatment_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tratamiento</label>
+                            <select id="treatment_id" name="treatment_id" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                                 <option value="">Selecciona un tratamiento</option>
                                 @foreach ($treats as $treat)
-                                    <option value="{{ $treat->description }}">{{ $treat->description }}</option>
+                                    <option value="{{ $treat->id }}">{{ $treat->description }}</option>
                                 @endforeach
                             </select>
                         </div>

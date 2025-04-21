@@ -1,3 +1,8 @@
+@php
+    use App\Models\User;
+    use App\Models\Treatment;
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -50,10 +55,11 @@
                             </tr>
                         @endif
                         @foreach ($appointments as $appointment)
+
                             <tr class="border-b">
-                                <td class="px-4 py-2">{{ $appointment->physio }}</td>
-                                <td class="px-4 py-2">{{ $appointment->patient }}</td>
-                                <td class="px-4 py-2">{{ $appointment->treatment }}</td>
+                                <td class="px-4 py-2">{{ $appointment->physio->name }}</td>
+                                <td class="px-4 py-2">{{ $appointment->patient->name }} {{ $appointment->patient->surname }}</td>
+                                <td class="px-4 py-2">{{ $appointment->treatment->description  }}</td>
                                 <td class="px-4 py-2">{{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y') }}</td>
                                 <td class="px-4 py-2">{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
                                 <td class="px-4 py-2 space-x-2">

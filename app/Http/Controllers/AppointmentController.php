@@ -33,7 +33,7 @@ class AppointmentController extends Controller
 
     public function createForPhysio()
     {
-        dd('llamo al metodo por lo menos');
+        //dd('llamo al metodo por lo menos');
         $physios = User::all()->where('role', 'physio');
         $users = User::all()->where('role', 'basic');
         $treats = Treatment::all();
@@ -45,9 +45,10 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
-            'physio' => 'required',
-            'treat' => 'required',
+            'physio_id' => 'required',
+            'treatment_id' => 'required',
             'date' => [
                 'required',
                 'date',
@@ -61,17 +62,17 @@ class AppointmentController extends Controller
             ],
             'time' => 'required',
         ], [
-            'physio.required' => 'El campo de fisioterapeuta es obligatorio.',
-            'treat.required' => 'El campo de tratamiento es obligatorio.',
+            'physio_id.required' => 'El campo de fisioterapeuta es obligatorio.',
+            'treat_id.required' => 'El campo de tratamiento es obligatorio.',
             'date.required' => 'La fecha es obligatoria.',
             'date.date' => 'La fecha no es válida.',
             'time.required' => 'La hora es obligatoria.',
         ]);
         try {
             $appointment = Appointment::create([
-                'physio' => $request->physio,
-                'patient' => Auth::id(),
-                'treatment' => $request->treat,
+                'physio_id' => $request->physio_id,
+                'patient_id' => Auth::id(),
+                'treatment_id' => $request->treatment_id,
                 'date' => $request->date,
                 'time' => $request->time,
             ]);
@@ -104,6 +105,7 @@ class AppointmentController extends Controller
 
         */
 
+        /*
         // Después de crear la cita
 $appointment = Appointment::create([
     'physio' => $request->physio,
@@ -112,6 +114,7 @@ $appointment = Appointment::create([
     'date' => $request->date,
     'time' => $request->time,
 ]);
+*/
 
 // Guardar la cita en la sesión
 session()->put('appointment', $appointment);
@@ -160,7 +163,8 @@ return redirect()->route('dashboard')->with('show_modal', true);
      */
     public function edit(Appointment $appointment)
     {
-        return view('appointment.edit', compact('appointment'));
+        $appointment->load(['physio', 'patient', 'treatment']);
+            return view('appointment.edit', compact('appointment'));
     }
 
     /**

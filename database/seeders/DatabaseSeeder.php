@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
              DB::table('users')->insert([
                 ['created_at' => '2025-03-25 00:00:00', 'updated_at' => '2025-03-25 00:00:00','name'=> 'Miriam','surname'=> 'López Jiménez','email'=> 'miriam@gmail.com','password'=> '$2y$12$K263xFVK4hLk7UPXnfjKX.TUnlgxE2ethRntlJwpBAvWRdVpQ6cSG','phone'=> '123456789', 'birthday'=> '1998-12-16','role'=> 'physio' ],
                 ['created_at' => '2025-03-25 00:00:00', 'updated_at' => '2025-03-25 00:00:00','name'=> 'Alejandro','surname'=> 'Algo Algo','email'=> 'alejandro@gmail.com','password'=> '$2y$12$K263xFVK4hLk7UPXnfjKX.TUnlgxE2ethRntlJwpBAvWRdVpQ6cSG','phone'=> '123456789', 'birthday'=> '1998-12-16','role'=> 'physio' ],
+                ['created_at' => '2025-03-25 00:00:00', 'updated_at' => '2025-03-25 00:00:00','name'=> 'Pepe','surname'=> 'Sanchez Garcia','email'=> 'pepe@gmail.com','password'=> '$2y$12$K263xFVK4hLk7UPXnfjKX.TUnlgxE2ethRntlJwpBAvWRdVpQ6cSG','phone'=> '123456789', 'birthday'=> '1998-12-16','role'=> 'basic' ],
             ]);
 
             DB::table('specialists')->insert([

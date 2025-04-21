@@ -14,14 +14,14 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('physio');
-            $table->unsignedBigInteger('patient');
-            $table->unsignedBigInteger('treatment');
+            $table->unsignedBigInteger('physio_id');
+            $table->unsignedBigInteger('patient_id');
+            $table->unsignedBigInteger('treatment_id');
             $table->date('date');
             $table->time('time');
-            $table->foreign('physio')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('patient')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('treatment')->references('id')->on('treatments')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('physio_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('patient_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('treatment_id')->references('id')->on('treatments')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();
         });

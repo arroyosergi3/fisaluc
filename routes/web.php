@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleCalendarController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsAdminOrPhysio;
-use App\Http\Middleware\IsPhysio;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,7 +44,9 @@ Route::resource('user', ProfileController::class)->middleware(IsAdmin::class);
 
 Route::resource('treatment', TreatmentController::class)->middleware(IsAdminOrPhysio::class);
 Route::resource('appointment', AppointmentController::class)->middleware(IsAdminOrPhysio::class);
-Route::get('appointment/createForPhysio', [AppointmentController::class, 'createForPhysio'])->middleware(IsAdminOrPhysio::class)->name('createForPhysio');
+Route::get('appointment/custom/createForPhysio', [AppointmentController::class, 'createForPhysio'])
+//->middleware(IsAdminOrPhysio::class)
+->name('createForPhysio');
 
 
 require __DIR__.'/auth.php';
