@@ -16,6 +16,7 @@
                     <form class="max-w-md mx-auto space-y-4" method="POST" action="{{ route('storedappointment') }}">
                         @csrf
 
+                        <input type="hidden" name="createdByPhysio" value="1">
                         {{-- Selector de fisioterapeuta --}}
                         <div>
                             <label for="physio_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fisioterapeuta</label>

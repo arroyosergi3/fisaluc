@@ -69,13 +69,24 @@ class AppointmentController extends Controller
             'time.required' => 'La hora es obligatoria.',
         ]);
         try {
-            $appointment = Appointment::create([
-                'physio_id' => $request->physio_id,
-                'patient_id' => Auth::id(),
-                'treatment_id' => $request->treatment_id,
-                'date' => $request->date,
-                'time' => $request->time,
-            ]);
+            if($request->has('createdByPhysio')){
+                $appointment = Appointment::create([
+                    'physio_id' => $request->physio_id,
+                    'patient_id' => $request->patient_id,
+                    'treatment_id' => $request->treatment_id,
+                    'date' => $request->date,
+                    'time' => $request->time,
+                ]);
+            }else{
+                $appointment = Appointment::create([
+                    'physio_id' => $request->physio_id,
+                    'patient_id' => Auth::id(),
+                    'treatment_id' => $request->treatment_id,
+                    'date' => $request->date,
+                    'time' => $request->time,
+                ]);
+            }
+
         } catch (\Throwable $th) {
             dd($th->getMessage());
             return to_route('dashboard')->with('msg', 'hay errores tete');
@@ -164,7 +175,11 @@ return redirect()->route('dashboard')->with('show_modal', true);
     public function edit(Appointment $appointment)
     {
         $appointment->load(['physio', 'patient', 'treatment']);
-            return view('appointment.edit', compact('appointment'));
+        $physios = User::all()->where('role', 'physio');
+        $users = User::all()->where('role', 'basic');
+        //dd("Pacientes: ", $users->toArray());
+        $treats = Treatment::all();
+            return view('appointment.edit', compact('appointment', 'users', 'physios', 'treats'));
     }
 
     /**
@@ -173,9 +188,9 @@ return redirect()->route('dashboard')->with('show_modal', true);
     public function update(Request $request, Appointment $appointment)
     {
         $request->validate([
-            'physio' => 'required|string|max:255',
-            'patient' => 'required|string|max:255',
-            'treatment' => 'required|string|max:255',
+            'physio_id' => 'required|string|max:255',
+            'patient_id' => 'required|string|max:255',
+            'treatment_id' => 'required|string|max:255',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i',
         ]);

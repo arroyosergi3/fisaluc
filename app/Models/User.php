@@ -53,6 +53,17 @@ class User extends Authenticatable
         ];
     }
 
+public function appointmentsAsPhysio()
+{
+    return $this->hasMany(Appointment::class, 'physio_id');
+}
+
+public function appointmentsAsPatient()
+{
+    return $this->hasMany(Appointment::class, 'patient_id');
+}
+
+
 public function routeNotificationForGoogleCalendar()
 {
     return [

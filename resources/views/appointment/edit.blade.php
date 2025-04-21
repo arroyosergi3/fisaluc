@@ -1,12 +1,4 @@
-@php
 
-    use App\Models\User;
-    use App\Models\Treatment;
-
-    $physios = User::all()->where('role', 'physio');
-    $users = User::all()->where('role', 'basic');
-    $treats = Treatment::all();
-@endphp
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -92,13 +84,8 @@
                     </div>
 
                     {{-- Botón --}}
-                    <div class="text-center">
-                        <button type="submit"
-                            class="mt-4 px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:text-teal-500 dark:hover:text-white dark:bg-neutral-50 dark:hover:bg-teal-500 dark:focus:ring-blue-800">
-                            Pedir Cita
-                        </button>
-                    </div>
-                </form>
+
+
 
                 @if ($errors->any())
                     <div class="mt-4 text-red-500">
@@ -110,7 +97,7 @@
                     </div>
                 @endif
 
-                <x-primary-button>
+                <x-primary-button class="mt-5">
                     Actualizar
                 </x-primary-button>
                 </form>
