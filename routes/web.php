@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TreatmentController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleCalendarController;
@@ -44,6 +45,7 @@ Route::resource('user', ProfileController::class)->middleware(IsAdmin::class);
 
 Route::resource('treatment', TreatmentController::class)->middleware(IsAdminOrPhysio::class);
 Route::resource('appointment', AppointmentController::class)->middleware(IsAdminOrPhysio::class);
+Route::resource('users', UserController::class)->middleware(IsAdminOrPhysio::class);
 Route::get('appointment/custom/createForPhysio', [AppointmentController::class, 'createForPhysio'])
 //->middleware(IsAdminOrPhysio::class)
 ->name('createForPhysio');

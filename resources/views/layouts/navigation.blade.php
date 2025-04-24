@@ -36,7 +36,9 @@
                     <x-nav-link :href="route('appointment.index')" :active="request()->routeIs('appointment.index')">
                         {{ __('CRUD Citas') }}
                     </x-nav-link>
-
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                        {{ __('CRUD Usuarios') }}
+                    </x-nav-link>
                     @endif
 
                 </div>
