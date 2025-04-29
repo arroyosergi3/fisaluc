@@ -39,8 +39,6 @@ class GoogleCalendarService
         }
 
         $service = new Google_Service_Calendar($client);
-        $t = Treatment::find($appointment->treatment);
-
         /*
         dd([
             'fecha cruda' => "{$appointment->date} {$appointment->time}",
@@ -55,7 +53,7 @@ class GoogleCalendarService
 
         $event = new Google_Service_Calendar_Event([
             'summary' => 'Cita de fisioterapia',
-            'description' => $t->description,
+            'description' => $appointment->treatment->description,
             'start' => [
     'dateTime' => $start->toRfc3339String(),
     'timeZone' => 'Europe/Madrid',

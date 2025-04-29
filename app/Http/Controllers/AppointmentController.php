@@ -149,14 +149,13 @@ return redirect()->route('dashboard')->with('show_modal', true);
     $calendar = new GoogleCalendarService();
 
     $client = Auth::user();
-    $physio = User::find($appointment->physio);
 
     if ($client->google_access_token) {
         $calendar->addEvent($client, $appointment);
     }
 
-    if ($physio && $physio->google_access_token) {
-        $calendar->addEvent($physio, $appointment);
+    if ($appointment->physio && $appointment->physio->google_access_token) {
+        $calendar->addEvent($appointment->physio, $appointment);
     }
 
     return redirect()->route('dashboard')->with('success', 'Cita añadida al calendario correctamente.');
