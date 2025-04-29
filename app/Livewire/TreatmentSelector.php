@@ -16,8 +16,8 @@ class TreatmentSelector extends Component
     public $selectedTreatment = null;
     public $selectedDate = null;
     public $busyHours = [];
-    public $selectedPhysio = null; // Declarar la propiedad
-
+    public $selectedPhysio = null;
+    public $idSelectedTreatment;
 
     public function mount()
     {
@@ -58,7 +58,7 @@ class TreatmentSelector extends Component
         if ($this->selectedPhysio && $this->selectedDate) {
             // Obtener las horas ocupadas para el fisio seleccionado en la fecha seleccionada
             $this->busyHours = DB::table('appointments')
-                ->where('physio', $this->selectedPhysio)
+                ->where('physio_id', $this->selectedPhysio)
                 ->whereDate('date', $this->selectedDate)
                 ->pluck('time')
                 ->map(function ($time) {

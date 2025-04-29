@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Tratamientos') }}
+            {{ __('Usuarios') }}
         </h2>
     </x-slot>
 
@@ -18,12 +18,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
 
 
-            <div class="mb-4 ">
-                <a href="{{ route('treatment.create') }}"
-                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:text-teal-500  dark:hover:text-white dark:bg-neutral-50 dark:hover:bg-teal-500 dark:focus:ring-blue-800">
-                    Nuevo Usuario
-                </a>
-            </div>
+
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 @if (session('success'))
                     <div class="text-green-500 mb-4">

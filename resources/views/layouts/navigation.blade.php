@@ -27,17 +27,21 @@
                         {{ __('Pide Cita') }}
                     </x-nav-link>
 
+<!-- Contact Link -->
+<x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
+    {{ __('Contacto') }}
+</x-nav-link>
 
                 <!-- Control Tratamientos Link -->
                     @if(Auth::user()->role == 'admin' || Auth::user()->role == 'physio')
                     <x-nav-link :href="route('treatment.index')" :active="request()->routeIs('treatment.index')">
-                        {{ __('CRUD Tratamientos') }}
+                        {{ __('Admin. Tratamientos') }}
                     </x-nav-link>
                     <x-nav-link :href="route('appointment.index')" :active="request()->routeIs('appointment.index')">
-                        {{ __('CRUD Citas') }}
+                        {{ __('Admin. Citas') }}
                     </x-nav-link>
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
-                        {{ __('CRUD Usuarios') }}
+                        {{ __('Admin. Usuarios') }}
                     </x-nav-link>
                     @endif
 

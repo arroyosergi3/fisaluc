@@ -24,11 +24,12 @@ class AppointmentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id = null)
     {
+        //dd("id:", $id);
         $physios = User::all()->where('role', 'physio');
         $treats = Treatment::all();
-        return view('clients.newappointment')->with(['physios' => $physios, 'treats' => $treats]);
+        return view('clients.newappointment')->with(['physios' => $physios, 'treats' => $treats, 'id' => $id]);
     }
 
     public function createForPhysio()
@@ -45,6 +46,7 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());
 
         $request->validate([
             'physio_id' => 'required',
@@ -78,6 +80,7 @@ class AppointmentController extends Controller
                     'time' => $request->time,
                 ]);
             }else{
+                //dd('se está creando para el no fisio');
                 $appointment = Appointment::create([
                     'physio_id' => $request->physio_id,
                     'patient_id' => Auth::id(),
