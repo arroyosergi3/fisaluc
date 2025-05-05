@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
                         @if (empty($users))
-                        No hay tratamientos para mostrar
+                        No hay ususarios para mostrar
                         @endif
                         @foreach ($users as $u)
                             <tr class="border-b">
@@ -66,6 +66,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-4">
+                    {{ $users->links() }}
+                </div>
 
             </div>
         </div>

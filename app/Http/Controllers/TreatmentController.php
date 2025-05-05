@@ -19,7 +19,7 @@ class TreatmentController extends Controller
 
     public function index()
     {
-        $treatments = Treatment::all();
+        $treatments = Treatment::paginate(10);
         return view('treatment.index', compact('treatments'));
     }
 

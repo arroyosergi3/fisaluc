@@ -38,7 +38,7 @@
                 @endif
 
                 <table class="min-w-full text-center">
-                    <thead>
+                    <thead class="text-center">
                         <tr>
                             <th class="px-4 py-2">Fisioterapeuta</th>
                             <th class="px-4 py-2">Paciente</th>
@@ -48,7 +48,7 @@
                             <th class="px-4 py-2">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-center">
                         @if ($appointments->isEmpty())
                             <tr>
                                 <td colspan="6" class="py-4">No hay citas para mostrar</td>
@@ -62,7 +62,7 @@
                                 <td class="px-4 py-2">{{ $appointment->treatment->description  }}</td>
                                 <td class="px-4 py-2">{{ \Carbon\Carbon::parse($appointment->date)->format('d/m/Y') }}</td>
                                 <td class="px-4 py-2">{{ \Carbon\Carbon::parse($appointment->time)->format('H:i') }}</td>
-                                <td class="px-4 py-2 space-x-2">
+                                <td class="px-4 py-2 space-x-2" >
                                     <a href="{{ route('appointment.edit', $appointment) }}">
                                         <x-primary-button>
                                             <i class="fa-solid fa-pen-to-square me-2"></i> {{ __('Editar') }}
@@ -83,7 +83,9 @@
                         @endforeach
                     </tbody>
                 </table>
-
+                <div class="mt-4">
+                    {{ $appointments->links() }}
+                </div>
             </div>
         </div>
     </div>

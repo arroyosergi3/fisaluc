@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleCalendarController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsAdminOrPhysio;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
@@ -57,13 +58,7 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 
-Route::get('/mail-test', function () {
-    Mail::raw('Esto es un correo de prueba desde Laravel', function ($message) {
-        $message->to('TU_CORREO_REAL@gmail.com')
-                ->subject('Prueba desde Laravel');
-    });
-
-    return 'Correo de prueba enviado (si todo salió bien)';
-});
+// MIS CITAS
+Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments');
 
 require __DIR__.'/auth.php';
