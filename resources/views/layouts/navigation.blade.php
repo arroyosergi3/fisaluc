@@ -33,7 +33,8 @@
                     </x-nav-link>
 
                     <!-- Control CRUDS Link -->
-                    @if (Auth::user()->role == 'admin' || Auth::user()->role == 'physio')
+                    @auth
+                        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'physio')
                         <x-nav-link :href="route('treatment.index')" :active="request()->routeIs('treatment.index')">
                             {{ __('Admin. Tratamientos') }}
                         </x-nav-link>
@@ -45,10 +46,14 @@
                         </x-nav-link>
                     @endif
 
+                    @endauth
+
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
+            @auth
+
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -89,6 +94,7 @@
                 </x-dropdown>
             </div>
 
+            @endauth
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
@@ -122,7 +128,7 @@
             </x-responsive-nav-link>
 
 
-
+@auth
             <!-- Control CRUDS Link -->
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'physio')
                 <x-responsive-nav-link :href="route('treatment.index')" :active="request()->routeIs('treatment.index')">
@@ -136,9 +142,13 @@
                 </x-responsive-nav-link>
             @endif
 
+            @endauth
+
         </div>
 
         <!-- Responsive Settings Options -->
+        @auth
+
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
@@ -162,5 +172,7 @@
                 </form>
             </div>
         </div>
+
+        @endauth
     </div>
 </nav>

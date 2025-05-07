@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Treatment;
 use App\Models\User;
+use App\Notifications\AppointmentRequested;
 use App\Services\GoogleCalendarService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class AppointmentController extends Controller
      */
     public function index() {
 
-        $appointments = Appointment::paginate(10);
+        $appointments = Appointment::orderBy('date', 'desc')->paginate(10);
         return view('appointment.index', compact('appointments'));
     }
 
@@ -79,6 +80,8 @@ class AppointmentController extends Controller
                     'date' => $request->date,
                     'time' => $request->time,
                 ]);
+
+            $appointment->patient->notify(new AppointmentRequested($appointment));
             }else{
                 //dd('se está creando para el no fisio');
                 $appointment = Appointment::create([
@@ -132,6 +135,7 @@ $appointment = Appointment::create([
 
 // Guardar la cita en la sesión
 session()->put('appointment', $appointment);
+auth()->user()->notify(new AppointmentRequested($appointment));
 
 return redirect()->route('dashboard')->with('show_modal', true);
 
@@ -211,5 +215,11 @@ return redirect()->route('dashboard')->with('show_modal', true);
     {
         $appointment->delete();
         return redirect()->route('appointment.index')->with('success', 'Cita eliminada correctamente.');
+    }
+
+    public function destroyForPatient(Appointment $appointment)
+    {
+        $appointment->delete();
+        return redirect()->route('myappointments')->with('deleteSuccess', 'Cita eliminada correctamente.');
     }
 }

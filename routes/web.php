@@ -14,12 +14,12 @@ use App\Models\Appointment;
 use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,18 +30,18 @@ Route::middleware('auth')->group(function () {
 // MIS RUTAS
 Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
 
-Route::get('/get-appointment/', [AppointmentController::class, 'create'])->name('newappointment');
-Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment');
+Route::get('/get-appointment/', [AppointmentController::class, 'create'])->name('newappointment')->middleware(['auth', 'verified']);
+Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment')->middleware(['auth', 'verified']);
 
 Route::get('auth/google', [GoogleController::class, 'googlepage']);
 Route::get('auth/google/callback', [GoogleController::class, 'googlecallback']);
 
 
-Route::get('/google-calendar/connect', [GoogleCalendarController::class, 'redirect'])->name('google.calendar.connect');
-Route::get('/google-calendar/callback', [GoogleCalendarController::class, 'callback'])->name('google.calendar.callback');
+Route::get('/google-calendar/connect', [GoogleCalendarController::class, 'redirect'])->middleware(['auth', 'verified'])->name('google.calendar.connect');
+Route::get('/google-calendar/callback', [GoogleCalendarController::class, 'callback'])->middleware(['auth', 'verified'])->name('google.calendar.callback');
 
 
-Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->name('addToCalendar');
+Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->middleware(['auth', 'verified'])->name('addToCalendar');
 
 
 Route::resource('user', ProfileController::class)->middleware(IsAdmin::class);
@@ -50,7 +50,7 @@ Route::resource('treatment', TreatmentController::class)->middleware(IsAdminOrPh
 Route::resource('appointment', AppointmentController::class)->middleware(IsAdminOrPhysio::class);
 Route::resource('users', UserController::class)->middleware(IsAdminOrPhysio::class);
 Route::get('appointment/custom/createForPhysio', [AppointmentController::class, 'createForPhysio'])
-//->middleware(IsAdminOrPhysio::class)
+->middleware(IsAdminOrPhysio::class)
 ->name('createForPhysio');
 
 //CONTACTO
@@ -59,6 +59,6 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 
 
 // MIS CITAS
-Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments');
-
+Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments')->middleware(['auth', 'verified']);
+Route::delete('/my-appointment/{appointment}', [AppointmentController::class, 'destroyForPatient'])->middleware(['auth', 'verified'])->name("destroyForPatient");
 require __DIR__.'/auth.php';

@@ -1,28 +1,52 @@
+@php
+    use Carbon\Carbon;
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Mis Citas') }}
         </h2>
-
     </x-slot>
 
-    <div class="py-12">
+
+
+    <div class="py-2 min-h-screen ">
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (session('deleteSuccess'))
+            <x-alert type="success" message="{{ session('deleteSuccess') }}"></x-alert>
+        @endif
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
 
-
                 @if ($ma->isEmpty())
-                    <p class="text-center text-gray-500">No hay tratamientos disponibles.</p>
+                    <p class="text-center text-gray-500">No tienes citas programadas.</p>
                 @else
-                    @foreach ($ma as $a)
+                    <div class="flex flex-wrap gap-8 justify-center">
+                        @foreach ($ma as $a)
 
-                    <p class="text-center text-gray-500">Dia: {{ $a->date }}</p>
-                    <p class="text-center text-gray-500">Hora: {{ $a->time }}</p>
-                    <p class="text-center text-gray-500">Tratamiento: {{ $a->treatment->description }}</p>
-                    <p class="text-center text-gray-500">Fisio: {{ $a->physio->name }}</p>
-                <br>
-                    @endforeach
+                                <div class="w-72 p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                                    <a href="#">
+                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Día: {{ Carbon::parse($a->date)->format('d-m-Y') }}</h5>
+                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Hora: {{ Carbon::parse($a->time)->format('H:i') }}</h5>
+                                    </a>
+                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Tratamiento: {{ $a->treatment->description }}</p>
+
+                                    <form action="{{ route('destroyForPatient', $a) }}" method="POST" >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <x-danger-button class="ms-3"
+                                            onclick="return confirm('¿Estás seguro de eliminar esta cita?')">
+                                            <i class="fa-solid fa-trash me-2"></i> {{ __('Anular Cita') }}
+                                        </x-danger-button>
+                                    </form>
+                                </div>
+
+                        @endforeach
+                    </div>
                 @endif
+
             </div>
         </div>
     </div>

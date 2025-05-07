@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 min-h-screen">
         @if (session('createSuccess'))
             <x-alert type="success" message="{{ session('createSuccess') }}"></x-alert>
         @endif
@@ -72,6 +72,7 @@
 
             </div>
         </div>
+
     </div>
 
     <x-footer />
