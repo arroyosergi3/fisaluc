@@ -10,6 +10,7 @@ use App\Services\GoogleCalendarService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -33,9 +34,11 @@ class AppointmentController extends Controller
         return view('clients.newappointment')->with(['physios' => $physios, 'treats' => $treats, 'id' => $id]);
     }
 
+    /**
+     * Show the form for creating a new resource from pyhsio view.
+     */
     public function createForPhysio()
     {
-        //dd('llamo al metodo por lo menos');
         $physios = User::all()->where('role', 'physio');
         $users = User::all()->where('role', 'basic');
         $treats = Treatment::all();
@@ -47,8 +50,6 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-
         $request->validate([
             'physio_id' => 'required',
             'treatment_id' => 'required',
@@ -83,7 +84,6 @@ class AppointmentController extends Controller
 
             $appointment->patient->notify(new AppointmentRequested($appointment));
             }else{
-                //dd('se está creando para el no fisio');
                 $appointment = Appointment::create([
                     'physio_id' => $request->physio_id,
                     'patient_id' => Auth::id(),
@@ -92,49 +92,14 @@ class AppointmentController extends Controller
                     'time' => $request->time,
                 ]);
             }
-
         } catch (\Throwable $th) {
-            dd($th->getMessage());
-            return to_route('dashboard')->with('msg', 'hay errores tete');
-        }
-/*
-        $calendar = new GoogleCalendarService();
 
-        // Obtener el cliente y el fisio
-        $client = Auth::user();
-        $physio = User::find($request->physio);
-
-        // Agregar al calendario de ambos (si tienen tokens)
-        if ($client->google_access_token) {
-            try {
-                //dd('intento crear en el de el cliente');
-                $calendar->addEvent($client, $appointment);
-            } catch (\Throwable $th) {
-                dd($th->getMessage());
-            }
-        } else {
-            return redirect()->route('dashboard')->with('error', 'Algo ha salido mal');
+            return to_route('dashboard')->with('error', 'Ha ocurrido un error insesperado, intentelo mas tarde');
         }
 
-        if ($physio && $physio->google_access_token) {
-            $calendar->addEvent($physio, $appointment);
-        }
 
-        */
-
-        /*
-        // Después de crear la cita
-$appointment = Appointment::create([
-    'physio' => $request->physio,
-    'patient' => Auth::id(),
-    'treatment' => $request->treat,
-    'date' => $request->date,
-    'time' => $request->time,
-]);
-*/
-
-// Guardar la cita en la sesión
 session()->put('appointment', $appointment);
+/** @disregard P1013 */
 auth()->user()->notify(new AppointmentRequested($appointment));
 
 return redirect()->route('dashboard')->with('show_modal', true);
@@ -162,7 +127,7 @@ return redirect()->route('dashboard')->with('show_modal', true);
         $calendar->addEvent($appointment->physio, $appointment);
     }
 
-    return redirect()->route('dashboard')->with('success', 'Cita añadida al calendario correctamente.');
+    return redirect()->route('dashboard')->with('addCalendarSucess', 'Cita añadida al calendario correctamente.');
 }
 
 
@@ -217,9 +182,77 @@ return redirect()->route('dashboard')->with('show_modal', true);
         return redirect()->route('appointment.index')->with('success', 'Cita eliminada correctamente.');
     }
 
+
+
+
+
+
+
+
+
+
+
+
     public function destroyForPatient(Appointment $appointment)
-    {
-        $appointment->delete();
-        return redirect()->route('myappointments')->with('deleteSuccess', 'Cita eliminada correctamente.');
+{
+    $user = Auth::user(); // El usuario actual
+
+    // Asegúrate de que la cita tiene todos los datos necesarios
+    if ($appointment->date && $appointment->time && $appointment->treatment->description) {
+        // Obtener el cliente de Google Calendar
+        $client = app(GoogleCalendarService::class)->getGoogleClient($user);
+       /** @disregard P1009 */
+        $service = new \Google_Service_Calendar($client);
+
+        // Establecer el rango de búsqueda del evento en Google Calendar (una hora antes y después de la cita)
+        $start = Carbon::parse("{$appointment->date} {$appointment->time}", 'Europe/Madrid');
+        $end = $start->copy()->addMinutes(45);
+
+        // Buscar los eventos cercanos a la fecha y hora de la cita
+        try {
+            $events = $service->events->listEvents('primary', [
+                'timeMin' => $start->toRfc3339String(),
+                'timeMax' => $end->toRfc3339String(),
+                'q' => 'Cita de fisioterapia',  // Usamos una descripción común
+            ]);
+
+            // Log para ver todos los eventos encontrados
+            Log::info("Eventos encontrados en el rango de tiempo:");
+            foreach ($events->getItems() as $event) {
+                Log::info("Evento: " . $event->getSummary() . " - Start: " . $event->getStart()->getDateTime());
+            }
+
+            // Verifica que se encontraron eventos
+            $foundEvent = false;
+
+            foreach ($events->getItems() as $event) {
+                // Verifica si la descripción y la fecha/hora coinciden exactamente
+                if ($event->getSummary() === 'Cita de fisioterapia' &&
+                    $event->getStart()->getDateTime() === $start->toRfc3339String()) {
+
+                    // Log para depuración: Mostrar el ID del evento encontrado
+                    Log::info("Evento encontrado para eliminar: " . $event->getId());
+
+                    // Intentar eliminar el evento de Google Calendar
+                    $service->events->delete('primary', $event->getId());
+                    Log::info("Evento eliminado de Google Calendar con ID: {$event->getId()}");
+
+                    $foundEvent = true;
+                    break; // Salir después de eliminar el primer evento que coincide
+                }
+            }
+            if (!$foundEvent) {
+                Log::warning('No se encontró el evento para eliminar en Google Calendar.');
+            }
+        } catch (\Google_Service_Exception $e) {
+            Log::error('Error al eliminar evento de Google Calendar: ' . $e->getMessage());
+        }
     }
+
+    $appointment->delete();
+    return redirect()->route('myappointments')->with('deleteSuccess', 'Cita eliminada correctamente.');
+}
+
+
+
 }

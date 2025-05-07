@@ -18,70 +18,118 @@ class GoogleCalendarService
     {
         //
     }
-    public function addEvent($user, $appointment)
+
+    public function getAccessToken($user)
     {
-        $client = new Google_Client();
+        $client = new \Google_Client();
         $client->setClientId(config('services.google.client_id'));
         $client->setClientSecret(config('services.google.client_secret'));
-        $client->setRedirectUri(config('services.google.redirect'));
-        $client->setAccessToken([
-            'access_token' => $user->google_access_token,
-            'refresh_token' => $user->google_refresh_token,
-            'expires_in' => $user->google_token_expiry,
-            'created' => now()->timestamp,
-        ]);
+        $client->setRedirectUri(route('google.calendar.callback'));
 
+        $client->setAccessToken($user->google_access_token);
+
+        // Refrescar el token si ha expirado
         if ($client->isAccessTokenExpired()) {
-            // Usa el refresh token si existe
             if ($client->getRefreshToken()) {
                 $newToken = $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
 
-                // Asegura que no hubo error
-                if (isset($newToken['access_token'])) {
-                    // Guarda el nuevo token
+                if (!isset($newToken['error'])) {
+                    // Guardamos el nuevo token
                     $user->update([
                         'google_access_token' => json_encode($client->getAccessToken())
                     ]);
                 } else {
-                    // Token inválido o revocado → forzar nuevo login
-                    return redirect()->route('dashboard')->with('error', 'Tu sesión ha expirado. Inicia sesión nuevamente.');
+                    throw new \Exception('No se pudo refrescar el token de Google: ' . $newToken['error_description']);
                 }
             } else {
-                // No hay refresh token → redirigir a login
-                return redirect()->route('google.login')->with('error', 'No hay refresh token disponible.');
+                throw new \Exception('No hay refresh token disponible. Vuelve a conectar tu cuenta de Google.');
             }
         }
 
+        return $client; // 👈 Esto debe ser una instancia válida de Google_Client
+    }
 
+    public function addEvent($user, $appointment)
+    {
+        // Usa el cliente autenticado
+        $client = $this->getGoogleClient($user);
 
+/** @disregard  */
         $service = new Google_Service_Calendar($client);
-        /*
-        dd([
-            'fecha cruda' => "{$appointment->date} {$appointment->time}",
-            'carbon' => Carbon::parse("{$appointment->date} {$appointment->time}")->toDateTimeString(),
-            'rfc3339' => Carbon::parse("{$appointment->date} {$appointment->time}")->toRfc3339String(),
-            'timezone' => config('app.timezone')
-        ]);
-        */
 
         $start = Carbon::parse("{$appointment->date} {$appointment->time}", 'Europe/Madrid');
         $end = $start->copy()->addMinutes(45);
 
+/** @disregard  */
         $event = new Google_Service_Calendar_Event([
             'summary' => 'Cita de fisioterapia',
             'description' => $appointment->treatment->description,
             'start' => [
-    'dateTime' => $start->toRfc3339String(),
-    'timeZone' => 'Europe/Madrid',
-],
-'end' => [
-    'dateTime' => $end->toRfc3339String(),
-    'timeZone' => 'Europe/Madrid',
-],
+                'dateTime' => $start->toRfc3339String(),
+                'timeZone' => 'Europe/Madrid',
+            ],
+            'end' => [
+                'dateTime' => $end->toRfc3339String(),
+                'timeZone' => 'Europe/Madrid',
+            ],
         ]);
 
-        $service->events->insert('primary', $event);
+        // Inserta el evento y obtén el ID
+        $createdEvent = $service->events->insert('primary', $event);
+
+        // Guarda el ID del evento en tu modelo (asumo que tienes una columna `google_event_id`)
+        $appointment->update([
+            'google_event_id' => $createdEvent->getId(),
+        ]);
     }
+
+
+
+public function getGoogleClient($user)
+    {
+        $client = new Google_Client();
+        $client->setClientId(config('services.google.client_id'));
+        $client->setClientSecret(config('services.google.client_secret'));
+        $client->setRedirectUri(route('google.calendar.callback'));
+
+        $client->setAccessToken($user->google_access_token);
+
+        if ($client->isAccessTokenExpired()) {
+            if ($client->getRefreshToken()) {
+                $newToken = $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+
+                if (!isset($newToken['error'])) {
+                    $user->update([
+                        'google_access_token' => $client->getAccessToken(),
+                    ]);
+                } else {
+                    throw new \Exception('No se pudo refrescar el token: ' . $newToken['error_description']);
+                }
+            } else {
+                throw new \Exception('No hay refresh token. Reconecta tu cuenta de Google.');
+            }
+        }
+
+        return $client;
+    }
+
+    public function deleteEvent($user, $eventId)
+    {
+        $client = $this->getGoogleClient($user);
+
+/** @disregard  */
+        $service = new Google_Service_Calendar($client);
+
+        try {
+            $service->events->delete('primary', $eventId);
+            return true;
+        } catch (\Google_Service_Exception $e) {
+            Log::error('Error al eliminar evento de Google: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+
 }
 
 

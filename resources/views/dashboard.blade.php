@@ -8,6 +8,12 @@
 
 
     </x-slot>
+    @if (session('addCalendarSucess'))
+    <x-alert type="sucess" message="{{ session('addCalendarSucess') }}" />
+@endif
+@if (session('error'))
+    <x-alert type="error" message="{{ session('error') }}" />
+@endif
 <div class="w-100">
          <!-- CARRUSEL -->
 
@@ -80,12 +86,8 @@
                     @if (session('adminerror'))
                     <x-alert type="error" message="{{ session('adminerror') }}" />
                 @endif
-
-
-
-
+                {{-- SI EL USUARIO ESTÁ LOGUEADO --}}
                 @auth
-
                     {{ __("You're logged in!") }}
                 </div>
                 @if (!auth()->user()->google_access_token)
@@ -94,11 +96,7 @@
                         Conectar con Google Calendar
                     </a>
                 @endif
-
                 @endauth
-
-
-
                 @if (session('show_modal'))
                     @php
                         $appointment = session('appointment');
@@ -141,10 +139,7 @@
                                         action="{{ route('addToCalendar', ['appointment_id' => $appointment->id]) }}"
                                         method="POST" class="flex space-x-2">
                                         @csrf
-                                        <button type="submit"
-                                            class="text-white bg-teal-500 hover:bg-teal-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-teal-500  dark:hover:text-white dark:bg-neutral-50 dark:hover:bg-teal-500 dark:focus:ring-blue-800">
-                                            Añadir
-                                        </button>
+                                        <x-primary-button >Añadir</x-primary-button>
                                     </form>
                                     <button data-modal-hide="default-modal" type="button"
                                         class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
@@ -154,9 +149,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const modalEl = document.getElementById('default-modal');
@@ -173,18 +165,8 @@
                         });
                     </script>
                 @endif
-
-
-
-
-
-
-
             </div>
         </div>
-
     </div>
-
-
     <x-footer/>
 </x-app-layout>

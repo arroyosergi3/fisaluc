@@ -20,6 +20,8 @@ class GoogleCalendarController extends Controller
         $client->setRedirectUri(route('google.calendar.callback'));
         $client->setAccessType('offline');
         $client->setPrompt('consent');
+
+/** @disregard  */
         $client->addScope(Google_Service_Calendar::CALENDAR);
 
         $authUrl = $client->createAuthUrl();
@@ -36,13 +38,18 @@ class GoogleCalendarController extends Controller
 
         $client->fetchAccessTokenWithAuthCode($request->code);
 
-        $tokens = $client->getAccessToken();
+        $tokens = $client->getAccessToken(); // ← Aquí se obtiene el array completo
 
         $user = Auth::user();
-        $user->google_access_token = $tokens['access_token'];
+        $user->google_access_token = $tokens; // ← Guardamos el array completo (no solo el access_token)
         $user->google_refresh_token = $tokens['refresh_token'] ?? $user->google_refresh_token;
+
+/** @disregard  */
         $user->save();
 
         return redirect()->route('dashboard')->with('message', 'Cuenta de Google conectada correctamente.');
     }
+
+
+
 }
