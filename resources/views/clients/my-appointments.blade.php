@@ -3,8 +3,8 @@
 @endphp
 
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+    <x-slot name="header" >
+        <h2 class="font-semibold text-xl text-white leading-tight">
             {{ __('Mis Citas') }}
         </h2>
     </x-slot>
@@ -22,28 +22,24 @@
                 @if ($ma->isEmpty())
                     <p class="text-center text-gray-500">No tienes citas programadas.</p>
                 @else
-                    <div class="flex flex-wrap gap-8 justify-center">
+                    <div class="flex flex-wrap justify- gap-8 ">
                         @foreach ($ma as $a)
+                        <div class="w-96 p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                            <div class="flex flex-col space-y-4">
+                                <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Día: {{ Carbon::parse($a->date)->format('d-m-Y') }}</h5>
+                                <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Hora: {{ Carbon::parse($a->time)->format('H:i') }}</h5>
+                                <p class="font-normal text-gray-700 dark:text-gray-400">Tratamiento: {{ $a->treatment->description }}</p>
 
-                                <div class="w-72 p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                                    <a href="#">
-                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Día: {{ Carbon::parse($a->date)->format('d-m-Y') }}</h5>
-                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Hora: {{ Carbon::parse($a->time)->format('H:i') }}</h5>
-                                    </a>
-                                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Tratamiento: {{ $a->treatment->description }}</p>
-
-                                    <form action="{{ route('destroyForPatient', $a) }}" method="POST" >
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <x-danger-button class="ms-3"
-                                            onclick="return confirm('¿Estás seguro de eliminar esta cita?')">
-                                            <i class="fa-solid fa-trash me-2"></i> {{ __('Anular Cita') }}
-                                        </x-danger-button>
-                                    </form>
-                                </div>
-
-                        @endforeach
+                                <form action="{{ route('destroyForPatient', $a) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-danger-button class="ms-3" onclick="return confirm('¿Estás seguro de eliminar esta cita?')">
+                                        <i class="fa-solid fa-trash me-2"></i> {{ __('Anular Cita') }}
+                                    </x-danger-button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
                     </div>
                 @endif
 
