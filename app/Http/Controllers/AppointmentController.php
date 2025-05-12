@@ -82,7 +82,8 @@ class AppointmentController extends Controller
                     'time' => $request->time,
                 ]);
 
-            $appointment->patient->notify(new AppointmentRequested($appointment));
+                $appointment->patient->notify(new AppointmentRequested($appointment));
+                $appointment->physio->notify(new AppointmentRequested($appointment));
             }else{
                 $appointment = Appointment::create([
                     'physio_id' => $request->physio_id,
@@ -91,6 +92,9 @@ class AppointmentController extends Controller
                     'date' => $request->date,
                     'time' => $request->time,
                 ]);
+                //dd($appointment->physio->toArray()); // Verifica todos los campos
+                $appointment->physio->notify(new AppointmentRequested($appointment));
+            $appointment->patient->notify(new AppointmentRequested($appointment));
             }
         } catch (\Throwable $th) {
 

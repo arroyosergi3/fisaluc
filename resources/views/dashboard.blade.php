@@ -14,7 +14,7 @@
     @if (session('error'))
         <x-alert type="error" message="{{ session('error') }}" />
     @endif
-    <div class="w-100">
+    <div class="w-100 ">
         <!-- CARRUSEL -->
 
 
