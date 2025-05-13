@@ -27,7 +27,7 @@ class UserController extends Controller
         $ma = Auth::user()->appointmentsAsPatient()
                  ->whereDate('date', '>', today()) // Filtra por fecha sin considerar la hora
                  ->orderBy('date', 'asc')
-                 ->get();
+                 ->paginate(6);
         return view('clients.my-appointments', compact('ma'));
     }
 

@@ -32,15 +32,15 @@
     </div>
 
     <!-- Controles del Carrusel -->
-    <button type="button" class="absolute top-1/2 -left-1 z-30 flex bg-white dark:bg-gray-400 items-center justify-center w-12 h-64 -translate-y-1/2 rounded shadow-lg" data-carousel-prev>
-        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <button type="button" class="bg-teal-500 absolute top-1/2 -left-1 z-30 flex  dark:bg-gray-400 items-center justify-center w-12 h-64 -translate-y-1/2 rounded shadow-lg" data-carousel-prev>
+        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
         <span class="sr-only">Anterior</span>
     </button>
 
-    <button type="button" class="absolute top-1/2 -right-1 z-30 flex bg-white dark:bg-gray-400 items-center justify-center w-12 h-64 -translate-y-1/2 rounded shadow-lg" data-carousel-next>
-        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <button type="button" class="absolute top-1/2 -right-1 z-30 flex bg-teal-500 dark:bg-gray-400 items-center justify-center w-12 h-64 -translate-y-1/2 rounded shadow-lg" data-carousel-next>
+        <svg class="w-6 h-6 text-gray-800" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
         </svg>
         <span class="sr-only">Siguiente</span>

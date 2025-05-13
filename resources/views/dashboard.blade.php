@@ -88,15 +88,17 @@
         </div>
     </div>
 
+
     <!-- DIV CONTENEDOR -->
     <div class="py-12 min-h-screen">
-        @if (session('addCalendarSucess'))
-        <x-alert type="sucess" message="{{ session('addCalendarSucess') }}" />
+
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+ @if (session('addCalendarSucess'))
+        <x-alert type="success" message="{{ session('addCalendarSucess') }}" />
     @endif
     @if (session('error'))
         <x-alert type="error" message="{{ session('error') }}" />
     @endif
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class=" dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 rounded">
                     @livewire('GoogleReviews')

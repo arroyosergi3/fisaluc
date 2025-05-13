@@ -41,6 +41,8 @@
                         </div>
                     @endforeach
                     </div>
+
+{{ $ma->links() }}
                 @endif
 
             </div>
