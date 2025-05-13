@@ -7,64 +7,113 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Google\Service\Calendar;
 use Illuminate\Support\Facades\Http;
 
 class GoogleController extends Controller
 {
     public function googlepage()
     {
+        /** @disregard */
         return Socialite::driver('google')
-        ->scopes([
-            'profile',
-            'email',
-            'https://www.googleapis.com/auth/user.birthday.read',  // Fecha de nacimiento
-            'https://www.googleapis.com/auth/user.phonenumbers.read' // Número de teléfono
-        ])
-        ->redirect();
+            ->scopes([
+                'profile',
+                'email',
+                'https://www.googleapis.com/auth/user.birthday.read',  // Fecha de nacimiento
+                'https://www.googleapis.com/auth/user.phonenumbers.read', // Número de teléfono
+                Calendar::CALENDAR
+                ])
+            ->with(['access_type' => 'offline', 'prompt' => 'consent']) // ✅ Esto es necesario para obtener refresh_token
+            ->redirect();
     }
 
-    public function googlecallback()
-    {
-        try {
-            $user = Socialite::driver('google')->user();
+   public function googlecallback()
+{
+    try {
+        $googleUser = Socialite::driver('google')->user();
 
-            // Llamar a Google People API para obtener más datos
-            $googleData = Http::withToken($user->token)->get("https://people.googleapis.com/v1/people/me?personFields=birthdays,phoneNumbers")->json();
+        // Obtén los tokens de Google
+        $tokens = $googleUser->token;
+        $refreshToken = $googleUser->refreshToken;  // Obtén el refresh token
 
-            // Extraer datos adicionales
-            $birthdate = $googleData['birthdays'][0]['date'] ?? null;
-            $phone = $googleData['phoneNumbers'][0]['value'] ?? null;
+        $existingUser = User::where('email', $googleUser->email)->first();
 
-            // Formatear fecha de nacimiento en YYYY-MM-DD
-            if ($birthdate) {
-                $birthdate = "{$birthdate['year']}-{$birthdate['month']}-{$birthdate['day']}";
-            }
+        if ($existingUser) {
+            // Si el usuario existe, guarda los tokens en la base de datos
+            $existingUser->google_access_token = $tokens;
+            $existingUser->google_refresh_token = $refreshToken;  // Guarda el refresh token
 
-            // Buscar usuario en la base de datos
-            $existingUser = User::where('email', $user->email)->first();
+            $existingUser->save();
 
-            if ($existingUser) {
-                Auth::login($existingUser);
-            } else {
-                // Crear nuevo usuario
-                $newUser = User::create([
-                    'name' => $user->user['given_name'],
-                    'surname' => $user->user['family_name'] ?? '',
-                    'phone' => $phone,
-                    'birthdate' => $birthdate,
-                    'email' => $user->email,
-                    'role' => 'basic',
-                    'google_id' => $user->id,
-                    'password' => bcrypt('password'),
-                ]);
-
-                Auth::login($newUser);
-            }
+            Auth::login($existingUser);
 
             return redirect()->route('dashboard');
+        } else {
+            // Si el usuario no existe, crea uno nuevo y guarda los tokens
+            $newUser = User::create([
+                'name' => $googleUser->user['given_name'],
+                'surname' => $googleUser->user['family_name'] ?? '',
+                'email' => $googleUser->email,
+                'google_id' => $googleUser->id,
+                'google_access_token' => $tokens,
+                'google_refresh_token' => $refreshToken,
+                'role' => 'basic',
+                'password' => bcrypt('password'),
+            ]);
 
-        } catch (Exception $e) {
-            //dd($e->getMessage());
+            Auth::login($newUser);
+            return redirect()->route('dashboard');
         }
+
+    } catch (Exception $e) {
+            //dd($e->getMessage()); // Muestra el mensaje de la excepción
+        return redirect('/')->with('error', 'Error autenticando con Google');
     }
+}
+
+
+public function storeMissingData(Request $request)
+{
+    $request->validate([
+        'phone' => 'required|string',
+        'birthdate' => 'required|date',
+    ]);
+    $user = Auth::user(); // Obtener el usuario autenticado
+
+    if ($user) {
+        $user->phone = $request->input('phone');
+        $user->birthday = $request->input('birthdate');
+        /** @disregard */
+        $user->save();
+        /** @disregard */
+Auth::setUser($user->fresh());
+
+        return redirect()->route('dashboard');
+    } else {
+        return redirect('/')->with('error', 'Usuario no autenticado.');
+    }
+}
+
+public function calendarCallback(Request $request)
+{
+    $client = new \Google_Client();
+    $client->setClientId(config('services.google.client_id'));
+    $client->setClientSecret(config('services.google.client_secret'));
+    $client->setRedirectUri(route('google.calendar.callback'));
+
+    $client->fetchAccessTokenWithAuthCode($request->code);
+
+    $tokens = $client->getAccessToken();
+
+    $user = Auth::user();
+    $user->google_access_token = $tokens;
+    $user->google_refresh_token = $tokens['refresh_token'] ?? $user->google_refresh_token;
+/** @disregard */
+    $user->save();
+
+    return redirect()->route('dashboard')->with('message', 'Cuenta de Google conectada correctamente.');
+}
+
+
+
 }

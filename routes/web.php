@@ -14,12 +14,12 @@ use App\Models\Appointment;
 use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
-    return view('dashboard');
+    return redirect("/dashboard");
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,12 +33,8 @@ Route::get('/services', [TreatmentController::class, 'indexClients'])->name('tre
 Route::get('/get-appointment/', [AppointmentController::class, 'create'])->name('newappointment')->middleware(['auth', 'verified']);
 Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment')->middleware(['auth', 'verified']);
 
-Route::get('auth/google', [GoogleController::class, 'googlepage']);
+Route::get('auth/google', [GoogleController::class, 'googlepage'])->name('googlepage');
 Route::get('auth/google/callback', [GoogleController::class, 'googlecallback']);
-
-
-Route::get('/google-calendar/connect', [GoogleCalendarController::class, 'redirect'])->middleware(['auth', 'verified'])->name('google.calendar.connect');
-Route::get('/google-calendar/callback', [GoogleCalendarController::class, 'callback'])->middleware(['auth', 'verified'])->name('google.calendar.callback');
 
 
 Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->middleware(['auth', 'verified'])->name('addToCalendar');
@@ -61,4 +57,11 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 // MIS CITAS
 Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments')->middleware(['auth', 'verified']);
 Route::delete('/my-appointment/{appointment}', [AppointmentController::class, 'destroyForPatient'])->middleware(['auth', 'verified'])->name("destroyForPatient");
+
+//COMPLETAR DATOS FALTANTES
+Route::post('/google/store-missing', [GoogleController::class, 'storeMissingData'])->name('google.storeMissing');
+Route::get('/google/calendar/callback', [GoogleController::class, 'calendarCallback'])->name('google.calendar.callback');
+
+
+
 require __DIR__.'/auth.php';

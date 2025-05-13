@@ -8,12 +8,9 @@
 
 
     </x-slot>
-    @if (session('addCalendarSucess'))
-        <x-alert type="sucess" message="{{ session('addCalendarSucess') }}" />
-    @endif
-    @if (session('error'))
-        <x-alert type="error" message="{{ session('error') }}" />
-    @endif
+
+
+
 
     <!-- CARRUSEL FOTOS -->
     <div class="w-100 ">
@@ -93,9 +90,15 @@
 
     <!-- DIV CONTENEDOR -->
     <div class="py-12 min-h-screen">
+        @if (session('addCalendarSucess'))
+        <x-alert type="sucess" message="{{ session('addCalendarSucess') }}" />
+    @endif
+    @if (session('error'))
+        <x-alert type="error" message="{{ session('error') }}" />
+    @endif
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-teal-500 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class=" dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100 rounded">
                     @livewire('GoogleReviews')
                     @if (session('adminerror'))
                         <x-alert type="error" message="{{ session('adminerror') }}" />
@@ -106,17 +109,20 @@
                     </div>
 
                     @if (!auth()->user()->google_access_token)
-                        <a href="{{ route('google.calendar.connect') }}"
+                        <a href=""
                             class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                             Conectar con Google Calendar
                         </a>
+                    @else
+                        <p class="dark:text-white">Ya está conectado con el google calendar</p>
                     @endif
+
                 @endauth
 
 
                 {{--  SOBRE NOSOTROS --}}
                 <div
-                    class="flex flex-col md:flex-row items-center md:items-start md:space-x-8 p-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                    class="flex flex-col md:flex-row items-center md:items-start md:space-x-8 p-6  dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <!-- Imagen -->
                     <div class="w-full md:w-1/2 mb-6 md:mb-0">
                         <img src="{{ asset('fisios.png') }}" alt="Fisios de Fisaluc"
@@ -150,8 +156,8 @@
                 </div>
 
                 {{--  DONDE NOS ENCONTRAMOS --}}
-                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-12">
-                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="  max-w-7xl mx-auto sm:px-6 lg:px-8 mb-12">
+                    <div class=" dark:bg-gray-800 overflow-hidden  sm:rounded-lg">
                         <div class="p-6 text-gray-900 dark:text-gray-100">
                             <h2 class="text-2xl font-semibold mb-4 text-center text-teal-600 dark:text-teal-300">
                                 ¿Dónde nos encontramos?
@@ -239,6 +245,54 @@
                         });
                     </script>
                 @endif
+
+
+
+                {{-- **NUEVA LÓGICA PARA MOSTRAR EL MODAL** --}}
+                @auth
+                    @if (empty(auth()->user()->phone) || empty(auth()->user()->birthday))
+                        <div id="dataModalBackdrop"
+                            class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+                            <div class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-xl w-full max-w-md">
+                                <h2 class="text-teal-500 text-xl font-semibold mb-4">Completa tus datos</h2>
+                                <form method="POST" action="{{ route('google.storeMissing') }}">
+                                    @csrf
+                                    <div class="mb-4">
+                                        <label for="phone"
+                                            class="dark:text-teal-500 block text-sm font-medium">Teléfono</label>
+                                        <input type="text" name="phone" id="phone"
+                                            class="mt-1 block w-full border border-gray-300 rounded-md"
+                                            @if (auth()->user()->phone) value="{{ auth()->user()->phone }}" readonly @else required @endif>
+                                        @error('phone')
+                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="birthdate" class="block text-sm font-medium">Fecha de
+                                            nacimiento</label>
+                                        <input type="date" name="birthdate" id="birthdate"
+                                            class="mt-1 block w-full border border-gray-300 rounded-md"
+                                            @if (auth()->user()->birthdate) value="{{ auth()->user()->birthdate }}" readonly @else required @endif>
+                                        @error('birthdate')
+                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="flex justify-end space-x-2">
+                                        <x-primary-button>Guardar</x-primary-button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                document.getElementById('dataModalBackdrop').style.display = 'flex';
+                            });
+                        </script>
+                    @endif
+                @endauth
+
             </div>
         </div>
     </div>

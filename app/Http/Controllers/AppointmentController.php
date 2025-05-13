@@ -119,6 +119,7 @@ return redirect()->route('dashboard')->with('show_modal', true);
     public function addToCalendar(Request $request)
 {
     $appointment = Appointment::with('treatment')->findOrFail($request->appointment_id);
+    /** @disregard */
     $calendar = new GoogleCalendarService();
 
     $client = Auth::user();
@@ -204,8 +205,9 @@ return redirect()->route('dashboard')->with('show_modal', true);
     // Asegúrate de que la cita tiene todos los datos necesarios
     if ($appointment->date && $appointment->time && $appointment->treatment->description) {
         // Obtener el cliente de Google Calendar
+/** @disregard */
         $client = app(GoogleCalendarService::class)->getGoogleClient($user);
-       /** @disregard P1009 */
+       /** @disregard */
         $service = new \Google_Service_Calendar($client);
 
         // Establecer el rango de búsqueda del evento en Google Calendar (una hora antes y después de la cita)
