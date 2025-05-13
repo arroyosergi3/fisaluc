@@ -17,7 +17,8 @@ class AppointmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {
+    public function index()
+    {
 
         $appointments = Appointment::orderBy('date', 'desc')->paginate(10);
         return view('appointment.index', compact('appointments'));
@@ -73,7 +74,7 @@ class AppointmentController extends Controller
             'time.required' => 'La hora es obligatoria.',
         ]);
         try {
-            if($request->has('createdByPhysio')){
+            if ($request->has('createdByPhysio')) {
                 $appointment = Appointment::create([
                     'physio_id' => $request->physio_id,
                     'patient_id' => $request->patient_id,
@@ -84,7 +85,7 @@ class AppointmentController extends Controller
 
                 $appointment->patient->notify(new AppointmentRequested($appointment));
                 $appointment->physio->notify(new AppointmentRequested($appointment));
-            }else{
+            } else {
                 $appointment = Appointment::create([
                     'physio_id' => $request->physio_id,
                     'patient_id' => Auth::id(),
@@ -94,7 +95,7 @@ class AppointmentController extends Controller
                 ]);
                 //dd($appointment->physio->toArray()); // Verifica todos los campos
                 $appointment->physio->notify(new AppointmentRequested($appointment));
-            $appointment->patient->notify(new AppointmentRequested($appointment));
+                $appointment->patient->notify(new AppointmentRequested($appointment));
             }
         } catch (\Throwable $th) {
 
@@ -102,11 +103,11 @@ class AppointmentController extends Controller
         }
 
 
-session()->put('appointment', $appointment);
-/** @disregard P1013 */
-auth()->user()->notify(new AppointmentRequested($appointment));
+        session()->put('appointment', $appointment);
+        /** @disregard P1013 */
+        auth()->user()->notify(new AppointmentRequested($appointment));
 
-return redirect()->route('dashboard')->with('show_modal', true);
+        return redirect()->route('dashboard')->with('show_modal', true)->with('sucess', "Cita agendada con éxito");
 
         return redirect()->route('dashboard')->with([
             'show_modal' => true,
@@ -117,23 +118,23 @@ return redirect()->route('dashboard')->with('show_modal', true);
 
 
     public function addToCalendar(Request $request)
-{
-    $appointment = Appointment::with('treatment')->findOrFail($request->appointment_id);
-    /** @disregard */
-    $calendar = new GoogleCalendarService();
+    {
+        $appointment = Appointment::with('treatment')->findOrFail($request->appointment_id);
+        /** @disregard */
+        $calendar = new GoogleCalendarService();
 
-    $client = Auth::user();
+        $client = Auth::user();
 
-    if ($client->google_access_token) {
-        $calendar->addEvent($client, $appointment);
+        if ($client->google_access_token) {
+            $calendar->addEvent($client, $appointment);
+        }
+
+        if ($appointment->physio && $appointment->physio->google_access_token) {
+            $calendar->addEvent($appointment->physio, $appointment);
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Cita añadida al calendario correctamente.');
     }
-
-    if ($appointment->physio && $appointment->physio->google_access_token) {
-        $calendar->addEvent($appointment->physio, $appointment);
-    }
-
-    return redirect()->route('dashboard')->with('addCalendarSucess', 'Cita añadida al calendario correctamente.');
-}
 
 
 
@@ -155,7 +156,7 @@ return redirect()->route('dashboard')->with('show_modal', true);
         $users = User::all()->where('role', 'basic');
         //dd("Pacientes: ", $users->toArray());
         $treats = Treatment::all();
-            return view('appointment.edit', compact('appointment', 'users', 'physios', 'treats'));
+        return view('appointment.edit', compact('appointment', 'users', 'physios', 'treats'));
     }
 
     /**
@@ -199,66 +200,65 @@ return redirect()->route('dashboard')->with('show_modal', true);
 
 
     public function destroyForPatient(Appointment $appointment)
-{
-    $user = Auth::user(); // El usuario actual
+    {
+        $user = Auth::user(); // El usuario actual
 
-    // Asegúrate de que la cita tiene todos los datos necesarios
-    if ($appointment->date && $appointment->time && $appointment->treatment->description) {
-        // Obtener el cliente de Google Calendar
-/** @disregard */
-        $client = app(GoogleCalendarService::class)->getGoogleClient($user);
-       /** @disregard */
-        $service = new \Google_Service_Calendar($client);
+        // Asegúrate de que la cita tiene todos los datos necesarios
+        if ($appointment->date && $appointment->time && $appointment->treatment->description) {
+            // Obtener el cliente de Google Calendar
+            /** @disregard */
+            $client = app(GoogleCalendarService::class)->getGoogleClient($user);
+            /** @disregard */
+            $service = new \Google_Service_Calendar($client);
 
-        // Establecer el rango de búsqueda del evento en Google Calendar (una hora antes y después de la cita)
-        $start = Carbon::parse("{$appointment->date} {$appointment->time}", 'Europe/Madrid');
-        $end = $start->copy()->addMinutes(45);
+            // Establecer el rango de búsqueda del evento en Google Calendar (una hora antes y después de la cita)
+            $start = Carbon::parse("{$appointment->date} {$appointment->time}", 'Europe/Madrid');
+            $end = $start->copy()->addMinutes(45);
 
-        // Buscar los eventos cercanos a la fecha y hora de la cita
-        try {
-            $events = $service->events->listEvents('primary', [
-                'timeMin' => $start->toRfc3339String(),
-                'timeMax' => $end->toRfc3339String(),
-                'q' => 'Cita de fisioterapia',  // Usamos una descripción común
-            ]);
+            // Buscar los eventos cercanos a la fecha y hora de la cita
+            try {
+                $events = $service->events->listEvents('primary', [
+                    'timeMin' => $start->toRfc3339String(),
+                    'timeMax' => $end->toRfc3339String(),
+                    'q' => 'Cita de fisioterapia',  // Usamos una descripción común
+                ]);
 
-            // Log para ver todos los eventos encontrados
-            Log::info("Eventos encontrados en el rango de tiempo:");
-            foreach ($events->getItems() as $event) {
-                Log::info("Evento: " . $event->getSummary() . " - Start: " . $event->getStart()->getDateTime());
-            }
-
-            // Verifica que se encontraron eventos
-            $foundEvent = false;
-
-            foreach ($events->getItems() as $event) {
-                // Verifica si la descripción y la fecha/hora coinciden exactamente
-                if ($event->getSummary() === 'Cita de fisioterapia' &&
-                    $event->getStart()->getDateTime() === $start->toRfc3339String()) {
-
-                    // Log para depuración: Mostrar el ID del evento encontrado
-                    Log::info("Evento encontrado para eliminar: " . $event->getId());
-
-                    // Intentar eliminar el evento de Google Calendar
-                    $service->events->delete('primary', $event->getId());
-                    Log::info("Evento eliminado de Google Calendar con ID: {$event->getId()}");
-
-                    $foundEvent = true;
-                    break; // Salir después de eliminar el primer evento que coincide
+                // Log para ver todos los eventos encontrados
+                Log::info("Eventos encontrados en el rango de tiempo:");
+                foreach ($events->getItems() as $event) {
+                    Log::info("Evento: " . $event->getSummary() . " - Start: " . $event->getStart()->getDateTime());
                 }
+
+                // Verifica que se encontraron eventos
+                $foundEvent = false;
+
+                foreach ($events->getItems() as $event) {
+                    // Verifica si la descripción y la fecha/hora coinciden exactamente
+                    if (
+                        $event->getSummary() === 'Cita de fisioterapia' &&
+                        $event->getStart()->getDateTime() === $start->toRfc3339String()
+                    ) {
+
+                        // Log para depuración: Mostrar el ID del evento encontrado
+                        Log::info("Evento encontrado para eliminar: " . $event->getId());
+
+                        // Intentar eliminar el evento de Google Calendar
+                        $service->events->delete('primary', $event->getId());
+                        Log::info("Evento eliminado de Google Calendar con ID: {$event->getId()}");
+
+                        $foundEvent = true;
+                        break; // Salir después de eliminar el primer evento que coincide
+                    }
+                }
+                if (!$foundEvent) {
+                    Log::warning('No se encontró el evento para eliminar en Google Calendar.');
+                }
+            } catch (\Google_Service_Exception $e) {
+                Log::error('Error al eliminar evento de Google Calendar: ' . $e->getMessage());
             }
-            if (!$foundEvent) {
-                Log::warning('No se encontró el evento para eliminar en Google Calendar.');
-            }
-        } catch (\Google_Service_Exception $e) {
-            Log::error('Error al eliminar evento de Google Calendar: ' . $e->getMessage());
         }
+
+        $appointment->delete();
+        return redirect()->route('myappointments')->with('deleteSuccess', 'Cita eliminada correctamente.');
     }
-
-    $appointment->delete();
-    return redirect()->route('myappointments')->with('deleteSuccess', 'Cita eliminada correctamente.');
-}
-
-
-
 }

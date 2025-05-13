@@ -93,8 +93,9 @@
     <div class="py-12 min-h-screen">
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
- @if (session('addCalendarSucess'))
-        <x-alert type="success" message="{{ session('addCalendarSucess') }}" />
+
+     @if (session('sucess'))
+        <x-alert type="success" message="{{ session('sucess') }}" />
     @endif
     @if (session('error'))
         <x-alert type="error" message="{{ session('error') }}" />
@@ -178,75 +179,41 @@
 
 
 
-                @if (session('show_modal'))
-                    @php
-                        $appointment = session('appointment');
-                    @endphp
+               @if (session('show_modal') && Auth::user()->google_access_token)
+    @php
+        $appointment = session('appointment');
+    @endphp
 
-                    <!-- Main modal -->
-                    <div id="default-modal" tabindex="-1" aria-hidden="true"
-                        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex items-center justify-center bg-gray-900/50">
-
-                        <div class="relative w-full max-w-2xl max-h-full">
-                            <!-- Modal content -->
-                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                <!-- Modal header -->
-                                <div
-                                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                        Cita pedida correctamente
-                                    </h3>
-                                    <button type="button"
-                                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                        data-modal-hide="default-modal">
-                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 14 14">
-                                            <path stroke="currentColor" stroke-linecap="round"
-                                                stroke-linejoin="round" stroke-width="2"
-                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                                        </svg>
-                                        <span class="sr-only">Cerrar modal</span>
-                                    </button>
-                                </div>
-                                <!-- Modal body -->
-                                <div class="p-4 md:p-5 space-y-4">
-                                    <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                        ¿Desea añadir la cita a su calendario?
-                                    </p>
-                                </div>
-                                <!-- Modal footer -->
-                                <div
-                                    class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                    <form id="add-to-calendar-form"
-                                        action="{{ route('addToCalendar', ['appointment_id' => $appointment->id]) }}"
-                                        method="POST" class="flex space-x-2">
-                                        @csrf
-                                        <x-primary-button>Añadir</x-primary-button>
-                                    </form>
-                                    <button data-modal-hide="default-modal" type="button"
-                                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                        Cancelar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const modalEl = document.getElementById('default-modal');
-                            const modal = new Modal(modalEl);
-                            modal.show();
-                            // Cerrar el modal al hacer clic en el botón de "Cancelar" o "X"
-                            const closeButtons = document.querySelectorAll('[data-modal-hide="default-modal"]');
-                            closeButtons.forEach(button => {
-                                button.addEventListener('click', function() {
-                                    modal.hide();
-                                });
-                            });
-
-                        });
-                    </script>
-                @endif
+    <x-modal show="true" name="appointment-confirmation">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Cita pedida correctamente
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" @click="$dispatch('close-modal', 'appointment-confirmation')">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Cerrar modal</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5 space-y-4">
+                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                    ¿Desea añadir la cita a su calendario?
+                </p>
+            </div>
+            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <form id="add-to-calendar-form" action="{{ route('addToCalendar', ['appointment_id' => $appointment->id]) }}" method="POST" class="flex space-x-2 me-2">
+                    @csrf
+                    <x-primary-button>Añadir</x-primary-button>
+                </form>
+                <x-secondary-button @click="$dispatch('close-modal', 'appointment-confirmation')">
+                    Cancelar
+                </x-secondary-button>
+            </div>
+        </div>
+    </x-modal>
+@endif
 
 
 

@@ -16,15 +16,13 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($treats as $treat)
                             <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                                <a href="#">
+
                                     <img class="w-full h-48 object-cover rounded-t-lg" src="{{ asset('storage/' . $treat->pic) }}" alt="{{ $treat->description }}" />
-                                </a>
+
                                 <div class="p-5">
-                                    <a href="#">
                                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                                             {{ $treat->description }}
                                         </h5>
-                                    </a>
                                     <a href="{{ route('newappointment') }}">
                                         <x-primary-button> Pedir cita
                                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"

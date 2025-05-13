@@ -1,0 +1,2 @@
+Simplificar codigo
+(modal de dashboard pasarlo a x-modal)
