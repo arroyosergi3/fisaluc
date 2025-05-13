@@ -14,10 +14,9 @@
     @if (session('error'))
         <x-alert type="error" message="{{ session('error') }}" />
     @endif
+
+    <!-- CARRUSEL FOTOS -->
     <div class="w-100 ">
-        <!-- CARRUSEL -->
-
-
         <div id="indicators-carousel" class="relative w-full" data-carousel="slide">
             <!-- Carousel wrapper -->
             <div class="relative h-96 overflow-hidden rounded-lg md:h-[50vh]">
@@ -90,15 +89,9 @@
                 </span>
             </button>
         </div>
-
-        {{-- FIN  CARROULSEL --}}
-
-
-
     </div>
 
-    {{-- FIN DIV CARROULSEL --}}
-
+    <!-- DIV CONTENEDOR -->
     <div class="py-12 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-teal-500 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -110,13 +103,7 @@
                     {{-- SI EL USUARIO ESTÁ LOGUEADO --}}
                     @auth
                         {{ __("You're logged in!") }}
-
-
-
-
                     </div>
-
-
 
                     @if (!auth()->user()->google_access_token)
                         <a href="{{ route('google.calendar.connect') }}"
@@ -162,8 +149,7 @@
                     </div>
                 </div>
 
-
-                <!-- Dónde nos encontramos -->
+                {{--  DONDE NOS ENCONTRAMOS --}}
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-12">
                     <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900 dark:text-gray-100">
