@@ -115,6 +115,32 @@
 
 
                     </div>
+
+                    {{--  SOBRE NOSOTROS --}}
+<div class="flex flex-col md:flex-row items-center md:items-start md:space-x-8 p-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+  <!-- Imagen -->
+  <div class="w-full md:w-1/2 mb-6 md:mb-0">
+    <img src="{{ asset('fisios.png') }}" alt="Fisios de Fisaluc" class="rounded-xl shadow-lg mx-auto">
+  </div>
+
+  <!-- Texto -->
+  <div class="w-full md:w-1/2 text-center md:text-left">
+    <p class="text-sm uppercase tracking-wide text-teal-500 dark:text-teal-300 mb-2">Sobre Nosotros</p>
+    <h2 class="text-2xl md:text-3xl font-semibold mb-4">Somos más que fisaluc</h2>
+    <p class="text-base leading-relaxed">
+     Después de años de estudio y práctica, María y Javier decidieron que era el momento de dar el siguiente paso en sus carreras. Compartían una visión clara: crear un espacio donde los pacientes no solo encontraran alivio a sus dolencias, sino que también recibieran un trato cálido y personalizado.
+    </p>
+    <br>
+    <p class="text-base leading-relaxed">
+    Con esfuerzo y dedicación, comenzaron a planear su clínica desde cero. Buscaron el local perfecto, diseñaron cada detalle para que transmitiera confianza y bienestar, y reunieron un equipo comprometido con su filosofía de trabajo. No fue fácil al principio, pero su pasión y determinación los impulsaron a superar cada obstáculo. </p>
+
+   <br> <p class="text-base leading-relaxed">
+Hoy, su clínica es un referente en la comunidad, conocida por su atención cercana y sus innovadoras técnicas de rehabilitación. Lo que empezó como un sueño se convirtió en una realidad gracias a su esfuerzo y amor por su profesión.    </p>
+  </div>
+</div>
+
+
+
                     @if (!auth()->user()->google_access_token)
                         <a href="{{ route('google.calendar.connect') }}"
                             class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
