@@ -51,6 +51,11 @@
                 </div>
             </div>
 
+            @guest
+                 <x-nav-link :href="route('login')" :active="request()->routeIs('login')" align="right">
+                            {{ __('Iniciar Sesión') }}
+                        </x-nav-link>
+            @endguest
             <!-- Settings Dropdown -->
             @auth
 
