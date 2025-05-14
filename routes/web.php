@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleCalendarController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsAdminOrPhysio;
+use App\Http\Middleware\ProfileComplete;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Mail;
 
@@ -22,10 +23,13 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(ProfileComplete::class);
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->middleware(ProfileComplete::class);
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->middleware(ProfileComplete::class);
 });
+
+//PROTEJO LAS RUTAS CON EL MIDDLEWARE PARA QUE COMPLETEN SUS PERFILES SI O SI
+Route::middleware(ProfileComplete::class)->group(function(){
 
 // MIS RUTAS
 Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
@@ -63,5 +67,7 @@ Route::post('/google/store-missing', [GoogleController::class, 'storeMissingData
 Route::get('/google/calendar/callback', [GoogleController::class, 'calendarCallback'])->name('google.calendar.callback');
 
 
+
+});
 
 require __DIR__.'/auth.php';

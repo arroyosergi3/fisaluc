@@ -94,12 +94,12 @@
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-     @if (session('sucess'))
-        <x-alert type="success" message="{{ session('sucess') }}" />
-    @endif
-    @if (session('error'))
-        <x-alert type="error" message="{{ session('error') }}" />
-    @endif
+            @if (session('sucess'))
+                <x-alert type="success" message="{{ session('sucess') }}" />
+            @endif
+            @if (session('error'))
+                <x-alert type="error" message="{{ session('error') }}" />
+            @endif
             <div class=" dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100 rounded">
                     @livewire('GoogleReviews')
@@ -112,8 +112,7 @@
                     </div>
 
                     @if (!auth()->user()->google_access_token)
-                        <a href=""
-                            class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        <a href="" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                             Conectar con Google Calendar
                         </a>
                     @else
@@ -179,86 +178,96 @@
 
 
 
-               @if (session('show_modal') && Auth::user()->google_access_token)
-    @php
-        $appointment = session('appointment');
-    @endphp
+                @if (session('show_modal') && Auth::user()->google_access_token)
+                    @php
+                        $appointment = session('appointment');
+                    @endphp
 
-    <x-modal show="true" name="appointment-confirmation">
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Cita pedida correctamente
-                </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" @click="$dispatch('close-modal', 'appointment-confirmation')">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Cerrar modal</span>
-                </button>
-            </div>
-            <div class="p-4 md:p-5 space-y-4">
-                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                    ¿Desea añadir la cita a su calendario?
-                </p>
-            </div>
-            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <form id="add-to-calendar-form" action="{{ route('addToCalendar', ['appointment_id' => $appointment->id]) }}" method="POST" class="flex space-x-2 me-2">
-                    @csrf
-                    <x-primary-button>Añadir</x-primary-button>
-                </form>
-                <x-secondary-button @click="$dispatch('close-modal', 'appointment-confirmation')">
-                    Cancelar
-                </x-secondary-button>
-            </div>
-        </div>
-    </x-modal>
-@endif
+                    <x-modal show="true" name="appointment-confirmation">
+                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                            <div
+                                class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Cita pedida correctamente
+                                </h3>
+                                <button type="button"
+                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                    @click="$dispatch('close-modal', 'appointment-confirmation')">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                    </svg>
+                                    <span class="sr-only">Cerrar modal</span>
+                                </button>
+                            </div>
+                            <div class="p-4 md:p-5 space-y-4">
+                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                                    ¿Desea añadir la cita a su calendario?
+                                </p>
+                            </div>
+                            <div
+                                class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                                <form id="add-to-calendar-form"
+                                    action="{{ route('addToCalendar', ['appointment_id' => $appointment->id]) }}"
+                                    method="POST" class="flex space-x-2 me-2">
+                                    @csrf
+                                    <x-primary-button>Añadir</x-primary-button>
+                                </form>
+                                <x-secondary-button @click="$dispatch('close-modal', 'appointment-confirmation')">
+                                    Cancelar
+                                </x-secondary-button>
+                            </div>
+                        </div>
+                    </x-modal>
+                @endif
 
 
 
                 {{-- **NUEVA LÓGICA PARA MOSTRAR EL MODAL** --}}
                 @auth
                     @if (empty(auth()->user()->phone) || empty(auth()->user()->birthday))
-                        <div id="dataModalBackdrop"
-                            class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-                            <div class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-xl w-full max-w-md">
-                                <h2 class="text-teal-500 text-xl font-semibold mb-4">Completa tus datos</h2>
-                                <form method="POST" action="{{ route('google.storeMissing') }}">
-                                    @csrf
-                                    <div class="mb-4">
-                                        <label for="phone"
-                                            class="dark:text-teal-500 block text-sm font-medium">Teléfono</label>
-                                        <input type="text" name="phone" id="phone"
-                                            class="mt-1 block w-full border border-gray-300 rounded-md"
-                                            @if (auth()->user()->phone) value="{{ auth()->user()->phone }}" readonly @else required @endif>
-                                        @error('phone')
-                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                       <x-modal show="true" name="complete-user-data">
+    <div class="flex items-center justify-center min-h-screen">
+        <div
+            class="relative bg-white dark:bg-gray-600 rounded-lg shadow-xl w-full max-w-md"
+            @click.away.stop
+        >
+            <div class="flex items-center justify-between p-4 border-b rounded-t dark:border-gray-500">
+                <h2 class="text-xl font-semibold text-teal-500">Completa tus datos</h2>
+            </div>
 
-                                    <div class="mb-4">
-                                        <label for="birthdate" class="block text-sm font-medium">Fecha de
-                                            nacimiento</label>
-                                        <input type="date" name="birthdate" id="birthdate"
-                                            class="mt-1 block w-full border border-gray-300 rounded-md"
-                                            @if (auth()->user()->birthdate) value="{{ auth()->user()->birthdate }}" readonly @else required @endif>
-                                        @error('birthdate')
-                                            <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="flex justify-end space-x-2">
-                                        <x-primary-button>Guardar</x-primary-button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+            <form method="POST" action="{{ route('google.storeMissing') }}" class="p-4 space-y-4">
+                @csrf
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                document.getElementById('dataModalBackdrop').style.display = 'flex';
-                            });
-                        </script>
+                <div>
+                    <label for="phone" class="block text-sm font-medium dark:text-teal-500">Teléfono</label>
+                    <input type="text" name="phone" id="phone"
+                        class="mt-1 block w-full border border-gray-300 rounded-md"
+                        @if (auth()->user()->phone) value="{{ auth()->user()->phone }}" readonly @else required @endif>
+                    @error('phone')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="birthdate" class="block text-sm font-medium dark:text-teal-500">Fecha de nacimiento</label>
+                    <input type="date" name="birthdate" id="birthdate"
+                        class="mt-1 block w-full border border-gray-300 rounded-md"
+                        @if (auth()->user()->birthdate) value="{{ auth()->user()->birthdate }}" readonly @else required @endif>
+                    @error('birthdate')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-2 border-t border-gray-200 dark:border-gray-500">
+                    <x-primary-button>Guardar</x-primary-button>
+                </div>
+            </form>
+        </div>
+    </div>
+</x-modal>
+
                     @endif
                 @endauth
 
