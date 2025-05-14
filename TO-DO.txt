@@ -1,2 +1,2 @@
 Simplificar codigo
-(modal de dashboard pasarlo a x-modal)
+Cambiar los inputs de los formularios por componentes inputs

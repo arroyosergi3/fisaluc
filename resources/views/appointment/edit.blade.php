@@ -1,4 +1,3 @@
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white leading-tight">
@@ -13,97 +12,75 @@
                     @csrf
                     @method('PUT')
 
-
                     {{-- Selector de fisioterapeuta --}}
-                    <div>
-                        <label for="physio_id"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fisioterapeuta</label>
+                    <div class="mb-4">
+                        <x-input-label for="physio_id" :value="__('Fisioterapeuta')" />
                         <select id="physio_id" name="physio_id" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                             <option value="">Selecciona un fisioterapeuta</option>
                             @foreach ($physios as $physio)
                                 <option value="{{ $physio->id }}"
-                                    {{ $appointment->physio->id == $physio->id ? 'selected' : '' }}>
+                                    {{ old('physio_id', $appointment->physio_id) == $physio->id ? 'selected' : '' }}>
                                     {{ $physio->name }}
                                 </option>
                             @endforeach
                         </select>
+                        <x-input-error :messages="$errors->get('physio_id')" />
                     </div>
 
-
                     {{-- Selector de paciente --}}
-
-                    <div>
-                        <label for="patient_id"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Paciente</label>
+                    <div class="mb-4">
+                        <x-input-label for="patient_id" :value="__('Paciente')" />
                         <select id="patient_id" name="patient_id" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                             <option value="">Selecciona un paciente</option>
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}"
-                                    {{ $appointment->patient->id == $user->id ? 'selected' : '' }}>
+                                    {{ old('patient_id', $appointment->patient_id) == $user->id ? 'selected' : '' }}>
                                     {{ $user->name }} {{ $user->surname }}
                                 </option>
                             @endforeach
                         </select>
+                        <x-input-error :messages="$errors->get('patient_id')" />
                     </div>
 
-
-
                     {{-- Selector de tratamiento --}}
-                    <div>
-                        <label for="treatment_id"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tratamiento</label>
+                    <div class="mb-4">
+                        <x-input-label for="treatment_id" :value="__('Tratamiento')" />
                         <select id="treatment_id" name="treatment_id" required
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                             <option value="">Selecciona un tratamiento</option>
                             @foreach ($treats as $treat)
                                 <option value="{{ $treat->id }}"
-                                    {{ $appointment->treatment->id == $treat->id ? 'selected' : '' }}>
+                                    {{ old('treatment_id', $appointment->treatment_id) == $treat->id ? 'selected' : '' }}>
                                     {{ $treat->description }}
                                 </option>
                             @endforeach
                         </select>
+                        <x-input-error :messages="$errors->get('treatment_id')" />
                     </div>
 
-
                     {{-- Fecha --}}
-                    <div>
-                        <label for="date"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
-                        <input type="date" id="date" name="date" value="{{ $appointment->date }}" required
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
+                    <div class="mb-4">
+                        <x-input-label for="date" :value="__('Fecha')" />
+                        <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
+                            :value="old('date', $appointment->date)" required />
+                        <x-input-error :messages="$errors->get('date')" />
                     </div>
 
                     {{-- Hora --}}
-                    <div>
-                        <label for="time"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
-                        <input type="time" value="{{ $appointment->time }}" id="time" name="time" required
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
+                    <div class="mb-4">
+                        <x-input-label for="time" :value="__('Hora')" />
+                        <x-text-input id="time" class="block mt-1 w-full" type="time" name="time"
+                            :value="old('time', $appointment->time)" required />
+                        <x-input-error :messages="$errors->get('time')" />
                     </div>
-
-                    {{-- Botón --}}
-
-
-
-                @if ($errors->any())
-                    <div class="mt-4 text-red-500">
-                        <ul class="list-disc pl-5">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <x-primary-button class="mt-5">
-                    Actualizar
-                </x-primary-button>
+                    <x-primary-button class="mt-5">
+                        Actualizar
+                    </x-primary-button>
                 </form>
             </div>
         </div>
     </div>
-
     <x-footer />
 </x-app-layout>

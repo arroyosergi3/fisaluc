@@ -66,12 +66,6 @@ class AppointmentController extends Controller
                 },
             ],
             'time' => 'required',
-        ], [
-            'physio_id.required' => 'El campo de fisioterapeuta es obligatorio.',
-            'treat_id.required' => 'El campo de tratamiento es obligatorio.',
-            'date.required' => 'La fecha es obligatoria.',
-            'date.date' => 'La fecha no es válida.',
-            'time.required' => 'La hora es obligatoria.',
         ]);
         try {
             if ($request->has('createdByPhysio')) {

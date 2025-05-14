@@ -17,74 +17,75 @@
                         @csrf
 
                         <input type="hidden" name="createdByPhysio" value="1">
+
                         {{-- Selector de fisioterapeuta --}}
                         <div>
-                            <label for="physio_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fisioterapeuta</label>
+                            <x-input-label for="physio_id" :value="__('Fisioterapeuta')" />
                             <select id="physio_id" name="physio_id" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                                 <option value="">Selecciona un fisioterapeuta</option>
-                                @foreach ($physios as $physio)
-                                    <option value="{{ $physio->id }}">{{ $physio->name }}</option>
-                                @endforeach
+                               @foreach ($physios as $physio)
+    <option value="{{ $physio->id }}" {{ old('physio_id') == $physio->id ? 'selected' : '' }}>
+        {{ $physio->name  }} {{ $physio->surname  }}
+    </option>
+@endforeach
+
                             </select>
+                            <x-input-error :messages="$errors->get('physio_id')" />
                         </div>
 
                         {{-- Selector de paciente --}}
                         <div>
-                            <label for="patient_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Paciente</label>
+                            <x-input-label for="patient_id" :value="__('Paciente')" />
                             <select id="patient_id" name="patient_id" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                                 <option value="">Selecciona un paciente</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
+    <option value="{{ $user->id }}" {{ old('patient_id') == $user->id ? 'selected' : '' }}>
+        {{ $user->name }} {{ $user->surname }}
+    </option>
+@endforeach
+
                             </select>
+                            <x-input-error :messages="$errors->get('patient_id')" />
                         </div>
 
                         {{-- Selector de tratamiento --}}
                         <div>
-                            <label for="treatment_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tratamiento</label>
+                            <x-input-label for="treatment_id" :value="__('Tratamiento')" />
                             <select id="treatment_id" name="treatment_id" required
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
                                 <option value="">Selecciona un tratamiento</option>
                                 @foreach ($treats as $treat)
-                                    <option value="{{ $treat->id }}">{{ $treat->description }}</option>
-                                @endforeach
+    <option value="{{ $treat->id }}" {{ old('treatment_id') == $treat->id ? 'selected' : '' }}>
+        {{ $treat->description }}
+    </option>
+@endforeach
+
                             </select>
+                            <x-input-error :messages="$errors->get('treatment_id')" />
                         </div>
 
                         {{-- Fecha --}}
                         <div>
-                            <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
-                            <input type="date" id="date" name="date" required
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
+                            <x-input-label for="date" :value="__('Fecha')" />
+                            <x-text-input id="date" class="block mt-1 w-full" type="date" name="date"
+                                :value="old('date')" required />
+                            <x-input-error :messages="$errors->get('date')" />
                         </div>
 
                         {{-- Hora --}}
                         <div>
-                            <label for="time" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Hora</label>
-                            <input type="time" id="time" name="time" required
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-teal-500">
+                            <x-input-label for="time" :value="__('Hora')" />
+                            <x-text-input id="time" class="block mt-1 w-full" type="time" name="time"
+                                :value="old('time')" required />
+                            <x-input-error :messages="$errors->get('time')" />
                         </div>
 
                         {{-- Botón --}}
-                        <div class="text-center">
-                            <button type="submit"
-                                class="mt-4 px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:text-teal-500 dark:hover:text-white dark:bg-neutral-50 dark:hover:bg-teal-500 dark:focus:ring-blue-800">
-                                Pedir Cita
-                            </button>
-                        </div>
+                        <x-primary-button>Pedir Cita</x-primary-button>
                     </form>
 
-                    @if ($errors->any())
-                        <div class="mt-4 text-red-500">
-                            <ul class="list-disc pl-5">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
 
                 </div>
             </div>

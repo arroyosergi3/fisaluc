@@ -37,10 +37,6 @@ Route::get('/services', [TreatmentController::class, 'indexClients'])->name('tre
 Route::get('/get-appointment/', [AppointmentController::class, 'create'])->name('newappointment')->middleware(['auth', 'verified']);
 Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment')->middleware(['auth', 'verified']);
 
-Route::get('auth/google', [GoogleController::class, 'googlepage'])->name('googlepage');
-Route::get('auth/google/callback', [GoogleController::class, 'googlecallback']);
-
-
 Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->middleware(['auth', 'verified'])->name('addToCalendar');
 
 
@@ -62,12 +58,19 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments')->middleware(['auth', 'verified']);
 Route::delete('/my-appointment/{appointment}', [AppointmentController::class, 'destroyForPatient'])->middleware(['auth', 'verified'])->name("destroyForPatient");
 
-//COMPLETAR DATOS FALTANTES
-Route::post('/google/store-missing', [GoogleController::class, 'storeMissingData'])->name('google.storeMissing');
-Route::get('/google/calendar/callback', [GoogleController::class, 'calendarCallback'])->name('google.calendar.callback');
 
 
 
 });
+
+//LOGIN CON GOOGLE
+Route::get('auth/google', [GoogleController::class, 'googlepage'])->name('googlepage');
+Route::get('auth/google/callback', [GoogleController::class, 'googlecallback']);
+
+
+//COMPLETAR DATOS FALTANTES
+Route::post('/google/store-missing', [GoogleController::class, 'storeMissingData'])->name('google.storeMissing');
+Route::get('/google/calendar/callback', [GoogleController::class, 'calendarCallback'])->name('google.calendar.callback');
+
 
 require __DIR__.'/auth.php';

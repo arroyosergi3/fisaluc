@@ -227,47 +227,36 @@
                 {{-- **NUEVA LÓGICA PARA MOSTRAR EL MODAL** --}}
                 @auth
                     @if (empty(auth()->user()->phone) || empty(auth()->user()->birthday))
-                       <x-modal show="true" name="complete-user-data">
-    <div class="flex items-center justify-center min-h-screen">
-        <div
-            class="relative bg-white dark:bg-gray-600 rounded-lg shadow-xl w-full max-w-md"
-            @click.away.stop
-        >
-            <div class="flex items-center justify-between p-4 border-b rounded-t dark:border-gray-500">
-                <h2 class="text-xl font-semibold text-teal-500">Completa tus datos</h2>
-            </div>
+                        <x-modal show="true" name="complete-user-data">
+                            <div class="flex  items-center justify-center ">
+                                <div class="relative bg-white dark:bg-gray-600 rounded-lg shadow-xl w-full "
+                                    @click.away.stop>
+                                    <div
+                                        class="flex items-center justify-between p-4 border-b rounded-t dark:border-gray-500">
+                                        <h2 class="text-xl font-semibold text-teal-500">Completa tus datos</h2>
+                                    </div>
+                                    <form method="POST" action="{{ route('google.storeMissing') }}"
+                                        class="p-4 space-y-4">
+                                        @csrf
 
-            <form method="POST" action="{{ route('google.storeMissing') }}" class="p-4 space-y-4">
-                @csrf
+                                        <div>
+                                            <x-input-label for="phone" :value="__('Teléfono')" />
+                                            <x-text-input id="phone" class="block mt-1 w-full" name="phone"
+                                                :value="old('phone', auth()->user()->phone)" :readonly="auth()->user()->phone ? true : false" :required="!auth()->user()->phone" autocomplete="tel" />
+                                            <x-input-error :messages="$errors->get('phone')" />
+                                        </div>
 
-                <div>
-                    <label for="phone" class="block text-sm font-medium dark:text-teal-500">Teléfono</label>
-                    <input type="text" name="phone" id="phone"
-                        class="mt-1 block w-full border border-gray-300 rounded-md"
-                        @if (auth()->user()->phone) value="{{ auth()->user()->phone }}" readonly @else required @endif>
-                    @error('phone')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="birthdate" class="block text-sm font-medium dark:text-teal-500">Fecha de nacimiento</label>
-                    <input type="date" name="birthdate" id="birthdate"
-                        class="mt-1 block w-full border border-gray-300 rounded-md"
-                        @if (auth()->user()->birthdate) value="{{ auth()->user()->birthdate }}" readonly @else required @endif>
-                    @error('birthdate')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="flex justify-end space-x-2 pt-2 border-t border-gray-200 dark:border-gray-500">
-                    <x-primary-button>Guardar</x-primary-button>
-                </div>
-            </form>
-        </div>
-    </div>
-</x-modal>
-
+                                        <div>
+                                            <x-input-label for="birthdate" :value="__('Fecha de nacimiento')" />
+                                            <x-text-input id="birthdate" class="block mt-1 w-full" type="date"
+                                                name="birthdate" :value="old('birthdate', auth()->user()->birthday)" :readonly="auth()->user()->birthday ? true : false" :required="!auth()->user()->birthday" />
+                                            <x-input-error :messages="$errors->get('birthdate')" />
+                                        </div>
+                                        <x-primary-button>Guardar</x-primary-button>
+                                    </form>
+                                </div>
+                            </div>
+                        </x-modal>
                     @endif
                 @endauth
 

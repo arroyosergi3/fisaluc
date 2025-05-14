@@ -75,8 +75,8 @@ class GoogleController extends Controller
 public function storeMissingData(Request $request)
 {
     $request->validate([
-        'phone' => 'required|string',
-        'birthdate' => 'required|date',
+    'phone' => 'required|numeric|digits:9',
+        'birthdate' => 'required|date|after:1900-01-01|',
     ]);
     $user = Auth::user(); // Obtener el usuario autenticado
 

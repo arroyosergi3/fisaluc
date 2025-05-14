@@ -16,26 +16,31 @@
                         @csrf
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 dark:text-gray-300">Nombre</label>
-                            <input type="text" name="name" step="0.01" class="w-full mt-1 rounded dark:bg-gray-700" placeholder="John Doe" required>
+                            <x-input-label for="name" :value="__('Nombre')" />
+                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
+                                :value="old('name')" placeholder="John Doe" required />
+                            <x-input-error :messages="$errors->get('name')" />
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 dark:text-gray-300">Email</label>
-                            <input type="text" name="email" step="0.01" class="w-full mt-1 rounded dark:bg-gray-700" placeholder="johndoe@hotmail.com"  required>
+                            <x-input-label for="email" :value="__('Email')" />
+                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
+                                :value="old('email')" placeholder="johndoe@hotmail.com" required />
+                            <x-input-error :messages="$errors->get('email')" />
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 dark:text-gray-300">Mensaje</label>
-                            <textarea name="message" class="w-full mt-1 rounded dark:bg-gray-700" placeholder="Escribe aquí tu mensaje..."></textarea>
+                            <x-input-label for="message" :value="__('Mensaje')" />
+                            <textarea id="message"
+                                class="block mt-1 w-full rounded dark:bg-gray-700 border-gray-300 focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600 dark:focus:border-teal-500 dark:focus:ring-teal-500"
+                                name="message" placeholder="Escribe aquí tu mensaje...">{{ old('message') }}</textarea>
+                            <x-input-error :messages="$errors->get('message')" />
                         </div>
 
-
-                    <x-primary-button>
-                        Enviar
-                    </x-primary-button>
+                        <x-primary-button>
+                            Enviar
+                        </x-primary-button>
                     </form>
-
                 </div>
 
 
@@ -43,5 +48,5 @@
         </div>
     </div>
 
-    <x-footer/>
+    <x-footer />
 </x-app-layout>
