@@ -264,4 +264,5 @@
         </div>
     </div>
     <x-footer />
+    @include('cookie-consent::index')
 </x-app-layout>

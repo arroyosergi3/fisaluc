@@ -31,20 +31,19 @@ Route::middleware('auth')->group(function () {
 //PROTEJO LAS RUTAS CON EL MIDDLEWARE PARA QUE COMPLETEN SUS PERFILES SI O SI
 Route::middleware(ProfileComplete::class)->group(function(){
 
-// MIS RUTAS
+// RUTAS PARA CLIENTES
 Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
-
 Route::get('/get-appointment/', [AppointmentController::class, 'create'])->name('newappointment')->middleware(['auth', 'verified']);
 Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment')->middleware(['auth', 'verified']);
-
 Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->middleware(['auth', 'verified'])->name('addToCalendar');
 
-
+//RECURSOS
 Route::resource('user', ProfileController::class)->middleware(IsAdmin::class);
-
 Route::resource('treatment', TreatmentController::class)->middleware(IsAdminOrPhysio::class);
-Route::resource('appointment', AppointmentController::class)->middleware(IsAdminOrPhysio::class);
 Route::resource('users', UserController::class)->middleware(IsAdminOrPhysio::class);
+Route::resource('appointment', AppointmentController::class)->middleware(IsAdminOrPhysio::class);
+
+// CREAR LA CITA PARA EL FISIO
 Route::get('appointment/custom/createForPhysio', [AppointmentController::class, 'createForPhysio'])
 ->middleware(IsAdminOrPhysio::class)
 ->name('createForPhysio');
@@ -53,20 +52,14 @@ Route::get('appointment/custom/createForPhysio', [AppointmentController::class, 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
-
 // MIS CITAS
 Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments')->middleware(['auth', 'verified']);
 Route::delete('/my-appointment/{appointment}', [AppointmentController::class, 'destroyForPatient'])->middleware(['auth', 'verified'])->name("destroyForPatient");
-
-
-
-
 });
 
 //LOGIN CON GOOGLE
 Route::get('auth/google', [GoogleController::class, 'googlepage'])->name('googlepage');
 Route::get('auth/google/callback', [GoogleController::class, 'googlecallback']);
-
 
 //COMPLETAR DATOS FALTANTES
 Route::post('/google/store-missing', [GoogleController::class, 'storeMissingData'])->name('google.storeMissing');

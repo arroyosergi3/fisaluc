@@ -66,6 +66,7 @@ class AppointmentController extends Controller
                 },
             ],
             'time' => 'required',
+            'privacy_policy' => 'required',
         ]);
         try {
             if ($request->has('createdByPhysio')) {
@@ -80,12 +81,14 @@ class AppointmentController extends Controller
                 $appointment->patient->notify(new AppointmentRequested($appointment));
                 $appointment->physio->notify(new AppointmentRequested($appointment));
             } else {
+                //dd($request->all());
                 $appointment = Appointment::create([
                     'physio_id' => $request->physio_id,
                     'patient_id' => Auth::id(),
                     'treatment_id' => $request->treatment_id,
                     'date' => $request->date,
                     'time' => $request->time,
+
                 ]);
                 //dd($appointment->physio->toArray()); // Verifica todos los campos
                 $appointment->physio->notify(new AppointmentRequested($appointment));

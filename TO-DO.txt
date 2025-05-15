@@ -1,2 +1,1 @@
-Simplificar codigo
-Cambiar los inputs de los formularios por componentes inputs
+terminos legales
