@@ -18,9 +18,7 @@ Route::get('/', function () {
     return redirect("/dashboard");
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::get('/dashboard', function () {return view('dashboard');})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->middleware(ProfileComplete::class);
@@ -55,6 +53,11 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 // MIS CITAS
 Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments')->middleware(['auth', 'verified']);
 Route::delete('/my-appointment/{appointment}', [AppointmentController::class, 'destroyForPatient'])->middleware(['auth', 'verified'])->name("destroyForPatient");
+
+//LEGAL
+Route::get('/legal-notice', function () {return view('clients.legal-notice');})->name('legal-notice');
+Route::get('/privacy-policy', function () {return view('clients.privacy-policy');})->name('privacy-policy');
+
 });
 
 //LOGIN CON GOOGLE

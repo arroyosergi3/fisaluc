@@ -33,13 +33,14 @@
                   </ul>
               </div>
               <div>
+                {{--  AVISO LEGAL --}}
                   <h2 class="mb-6 text-sm font-semibold text-white uppercase dark:text-white">Legal</h2>
                   <ul class="text-white dark:text-white font-medium">
                       <li class="mb-4">
-                          <a href="#" class="hover:underline">Política de Privacidad</a>
+                          <a href="{{ url('legal-notice') }}" class="hover:underline">Aviso Legal</a>
                       </li>
                       <li>
-                          <a href="#" class="hover:underline">Términos y condiciones</a>
+                          <a href="{{ url('privacy-policy') }}" class="hover:underline">Política de Privacidad</a>
                       </li>
                   </ul>
               </div>

@@ -32,7 +32,7 @@
                         <div class="mb-4">
                             <x-input-label for="message" :value="__('Mensaje')" />
                             <textarea id="message"
-                                class="block mt-1 w-full rounded dark:bg-gray-700 border-gray-300 focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600 dark:focus:border-teal-500 dark:focus:ring-teal-500"
+                                class="block mt-1 w-full rounded dark:bg-gray-900 border-gray-300 focus:border-teal-500 focus:ring-teal-500 dark:border-gray-600 dark:focus:border-teal-500 dark:focus:ring-teal-500"
                                 name="message" placeholder="Escribe aquí tu mensaje...">{{ old('message') }}</textarea>
                             <x-input-error :messages="$errors->get('message')" />
                         </div>
