@@ -30,7 +30,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(ProfileComplete::class)->group(function(){
 
 // RUTAS PARA CLIENTES
-Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
 Route::get('/get-appointment/', [AppointmentController::class, 'create'])->name('newappointment')->middleware(['auth', 'verified']);
 Route::post('/get-appointment', [AppointmentController::class, 'store'])->name('storedappointment')->middleware(['auth', 'verified']);
 Route::post('/add-to-calendar/{appointment_id}', [AppointmentController::class, 'addToCalendar'])->middleware(['auth', 'verified'])->name('addToCalendar');
@@ -59,6 +58,9 @@ Route::get('/legal-notice', function () {return view('clients.legal-notice');})-
 Route::get('/privacy-policy', function () {return view('clients.privacy-policy');})->name('privacy-policy');
 
 });
+
+Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
+
 
 //LOGIN CON GOOGLE
 Route::get('auth/google', [GoogleController::class, 'googlepage'])->name('googlepage');

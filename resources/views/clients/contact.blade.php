@@ -4,13 +4,14 @@
             {{ __('Formulario de Contacto') }}
         </h2>
         <script src="https://cdn.jsdelivr.net/npm/flowbite@1.5.1/dist/flowbite.js"></script>
-        @if (session('success'))
-            <x-alert type="success" message="{{ session('success') }}"></x-alert>
-        @endif
+
     </x-slot>
     <div class="py-12 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                @if (session('success'))
+            <x-alert type="success" message="{{ session('success') }}"></x-alert>
+        @endif
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <form method="POST" action="{{ route('contact.send') }}">
                         @csrf

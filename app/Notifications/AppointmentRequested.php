@@ -42,6 +42,7 @@ class AppointmentRequested extends Notification
         ->line('Una nueva cita ha sido solicitada.')
         ->line('Detalles de la cita:')
         ->line('Fecha: ' . $this->appointment->date)
+        ->line('Paciente: ' . $this->appointment->patient->name . ' '.$this->appointment->patient->surname )
         ->line('Hora: ' . $this->appointment->time)
         ->line('Tratamiento: ' . $this->appointment->treatment->description)
         ->line('Fisioterapeuta: ' . $this->appointment->physio->name)

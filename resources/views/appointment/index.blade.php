@@ -11,7 +11,9 @@
     </x-slot>
 
     <div class="py-12 min-h-screen">
-        @if (session('createSuccess'))
+
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
+ @if (session('createSuccess'))
             <x-alert type="success" message="{{ session('createSuccess') }}"></x-alert>
         @endif
         @if (session('createError'))
@@ -20,8 +22,6 @@
         @if (session('updateSuccess'))
             <x-alert type="success" message="{{ session('updateSuccess') }}"></x-alert>
         @endif
-
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
 
             <div class="mb-4">
                 <a href="{{ route('createForPhysio') }}"

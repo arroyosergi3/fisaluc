@@ -200,7 +200,9 @@ class AppointmentController extends Controller
     {
         $user = Auth::user(); // El usuario actual
 
-        // Asegúrate de que la cita tiene todos los datos necesarios
+        if ($user->google_access_token) {
+            # code...
+
         if ($appointment->date && $appointment->time && $appointment->treatment->description) {
             // Obtener el cliente de Google Calendar
             /** @disregard */
@@ -253,6 +255,7 @@ class AppointmentController extends Controller
             } catch (\Google_Service_Exception $e) {
                 Log::error('Error al eliminar evento de Google Calendar: ' . $e->getMessage());
             }
+        }
         }
 
         $appointment->delete();
