@@ -45,10 +45,6 @@ Route::get('appointment/custom/createForPhysio', [AppointmentController::class, 
 ->middleware(IsAdminOrPhysio::class)
 ->name('createForPhysio');
 
-//CONTACTO
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
-
 // MIS CITAS
 Route::get('/my-appointments', [UserController::class, 'myAppointments'])->name('myappointments')->middleware(['auth', 'verified']);
 Route::delete('/my-appointment/{appointment}', [AppointmentController::class, 'destroyForPatient'])->middleware(['auth', 'verified'])->name("destroyForPatient");
@@ -61,6 +57,11 @@ Route::get('/privacy-policy', function () {return view('clients.privacy-policy')
 
 Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
 
+
+
+//CONTACTO
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 //LOGIN CON GOOGLE
 Route::get('auth/google', [GoogleController::class, 'googlepage'])->name('googlepage');
