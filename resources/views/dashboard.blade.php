@@ -23,22 +23,22 @@
                         class="absolute block w-full -translate-x-1/2 -translate-y-1/2 bottom-0 top-1/2 left-1/2" alt="...">
                 </div>
                 <!-- Item 2 -->
-                <div class="hidden duration-700  ease-in-out object-cover absolute  bottom-0 " data-carousel-item>
+                <div class="hidden duration-700  ease-in-out object-cover   " data-carousel-item>
                     <img src="{{ asset('car_img_2_sin_recortar.jpg') }}"
                         class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 bottom-0 left-1/2" alt="...">
                 </div>
                 <!-- Item 3 -->
-                <div class="hidden duration-700  ease-in-out object-cover absolute  bottom-0 " data-carousel-item>
+                <div class="hidden duration-700  ease-in-out object-cover   " data-carousel-item>
                     <img src="{{ asset('car_img_3.jpg') }}"
                         class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
                 </div>
                 <!-- Item 4 -->
-                <div class="hidden duration-700  ease-in-out object-cover absolute  bottom-0 " data-carousel-item>
+                <div class="hidden duration-700  ease-in-out object-cover   " data-carousel-item>
                     <img src="{{ asset('car_img_4.jpg') }}"
                         class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
                 </div>
                 <!-- Item 5 -->
-                <div class="hidden duration-700  ease-in-out object-cover absolute  bottom-0 " data-carousel-item>
+                <div class="hidden duration-700  ease-in-out object-cover   " data-carousel-item>
                     <img src="{{ asset('car_img_5.jpg') }}"
                         class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
                 </div>
@@ -106,20 +106,7 @@
                     @if (session('adminerror'))
                         <x-alert type="error" message="{{ session('adminerror') }}" />
                     @endif
-                    {{-- SI EL USUARIO ESTÁ LOGUEADO --}}
-                    @auth
-                        {{ __("You're logged in!") }}
-                    </div>
-
-                    @if (!auth()->user()->google_access_token)
-                        <a href="" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                            Conectar con Google Calendar
-                        </a>
-                    @else
-                        <p class="dark:text-white">Ya está conectado con el google calendar</p>
-                    @endif
-
-                @endauth
+                    
 
 
                 {{--  SOBRE NOSOTROS --}}
