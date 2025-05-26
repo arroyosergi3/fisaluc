@@ -16,7 +16,7 @@
     <div class="w-100 ">
         <div id="indicators-carousel" class="relative w-full" data-carousel="slide">
             <!-- Carousel wrapper -->
-            <div class="relative h-96 overflow-hidden rounded-lg md:h-[50vh]">
+            <div class="relative h-96 overflow-hidden rounded-lg md:h-[50vh] sm:h[25vh]">
                 <!-- Item 1 -->
                 <div class="hidden duration-700 ease-in-out" data-carousel-item="active">
                     <img src="{{ asset('car_img_1.jpg') }}"
