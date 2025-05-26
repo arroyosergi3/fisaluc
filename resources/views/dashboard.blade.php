@@ -106,20 +106,7 @@
                     @if (session('adminerror'))
                         <x-alert type="error" message="{{ session('adminerror') }}" />
                     @endif
-                    {{-- SI EL USUARIO ESTÁ LOGUEADO --}}
-                    @auth
-                        {{ __("You're logged in!") }}
-                    </div>
-
-                    @if (!auth()->user()->google_access_token)
-                        <a href="" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                            Conectar con Google Calendar
-                        </a>
-                    @else
-                        <p class="dark:text-white">Ya está conectado con el google calendar</p>
-                    @endif
-
-                @endauth
+                   
 
 
                 {{--  SOBRE NOSOTROS --}}
