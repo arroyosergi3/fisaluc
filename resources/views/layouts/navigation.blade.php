@@ -52,9 +52,11 @@
             </div>
 
             @guest
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                  <x-nav-link :href="route('login')" :active="request()->routeIs('login')" align="right">
                             {{ __('Iniciar Sesión') }}
                         </x-nav-link>
+            </div>
             @endguest
             <!-- Settings Dropdown -->
             @auth
@@ -131,6 +133,12 @@
             <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
                 {{ __('Contacto') }}
             </x-responsive-nav-link>
+
+            @guest
+                 <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')" align="right">
+                            {{ __('Iniciar Sesión') }}
+                        </x-responsive-nav-link>
+            @endguest
 
 
 @auth
