@@ -6,7 +6,7 @@
         <div class="md:flex md:justify-between">
           <div class="mb-6 md:mb-0">
               <a href="{{ route("dashboard") }}" class="flex items-center">
-                  <img src="storage/logoRelleno.jpg" class="h-20 me-3" alt="Fisaluc Logo" />
+                  <img src="{{ asset('favicon.ico') }}" class="h-20 me-3" alt="Fisaluc Logo" />
               </a>
           </div>
           <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
@@ -25,10 +25,10 @@
                   <h2 class="mb-6 text-sm font-semibold text-white uppercase dark:text-white">Navegación Rápida</h2>
                   <ul class="text-white dark:text-white font-medium">
                       <li class="mb-4">
-                          <a href="https://github.com/themesberg/flowbite" class="hover:underline ">Meter aqui elace a pagina</a>
+                          <a href="{{ url('/services') }}" class="hover:underline ">Servicios</a>
                       </li>
                       <li>
-                          <a href="https://discord.gg/4eeurUVvTy" class="hover:underline">Meter aqui elace a pagina</a>
+                          <a href="{{ url('/contact') }}" class="hover:underline">Contacto</a>
                       </li>
                   </ul>
               </div>
