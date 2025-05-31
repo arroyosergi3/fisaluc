@@ -9,7 +9,7 @@ class Specialist extends Model
 {
     use HasFactory;
 
-    protected $table = 'specialists'; // Asegura que estás apuntando a la tabla correcta
+    protected $table = 'specialists'; 
 
     protected $fillable = ['physio', 'treatment'];
 
@@ -18,7 +18,7 @@ class Specialist extends Model
         return $this->belongsTo(User::class, 'physio');
     }
 
-    public function treatment()
+    public function treatmentModel()
     {
         return $this->belongsTo(Treatment::class, 'treatment');
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Specialist;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,28 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
+    public function storeSpecialist(Request $request)
+{
+    $request->validate([
+        'physio_id' => 'required|exists:users,id',
+        'treatment_id' => 'required|exists:treatments,id',
+    ]);
+
+    $alreadyExists = \App\Models\Specialist::where('physio', $request->physio_id)
+        ->where('treatment', $request->treatment_id)
+        ->exists();
+
+    if (!$alreadyExists) {
+        \App\Models\Specialist::create([
+            'physio' => $request->physio_id,
+            'treatment' => $request->treatment_id,
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Especialidad añadida correctamente.');
+}
+
+
     /**
      * Delete the user's account.
      */
@@ -60,4 +83,11 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+      public function spcialistDestroy(Specialist $specialist)
+    {
+        $specialist->delete();
+        return redirect()->back()->with('success', 'Especialidad eliminada correctamente.');
+    }
+
 }

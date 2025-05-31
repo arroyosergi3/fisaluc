@@ -60,6 +60,11 @@ public function appointmentsAsPhysio()
     return $this->hasMany(Appointment::class, 'physio_id');
 }
 
+public function specialist()
+{
+    return $this->hasMany(Specialist::class, 'physio');
+}
+
 public function appointmentsAsPatient()
 {
     return $this->hasMany(Appointment::class, 'patient_id');

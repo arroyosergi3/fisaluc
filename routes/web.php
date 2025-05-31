@@ -53,6 +53,11 @@ Route::delete('/my-appointment/{appointment}', [AppointmentController::class, 'd
 Route::get('/legal-notice', function () {return view('clients.legal-notice');})->name('legal-notice');
 Route::get('/privacy-policy', function () {return view('clients.privacy-policy');})->name('privacy-policy');
 
+
+Route::post('/profile', [ProfileController::class, 'storeSpecialist'])->name('specialist.add');
+Route::delete('/profile/speciality/{specialist}', [ProfileController::class, 'spcialistDestroy'])->name('specilist.destroy');
+
+
 });
 
 Route::get('/services', [TreatmentController::class, 'indexClients'])->name('treats');
