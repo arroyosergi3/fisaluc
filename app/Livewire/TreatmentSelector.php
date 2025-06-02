@@ -19,9 +19,15 @@ class TreatmentSelector extends Component
     public $selectedPhysio = null;
     public $idSelectedTreatment;
 
-    public function mount()
+
+    public function mount($sessionTreatmentId = null)
     {
+        
         $this->treatments = Treatment::all();
+    if (!$this->selectedTreatment && $sessionTreatmentId) {
+        $this->selectedTreatment = $sessionTreatmentId;
+        $this->updatedSelectedTreatment($sessionTreatmentId);
+    }
     }
 
     public function updatedSelectedTreatment($treatmentId)

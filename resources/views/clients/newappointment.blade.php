@@ -18,7 +18,8 @@
                     <form class="max-w-sm mx-auto" method="POST" action="{{ route('storedappointment') }}">
                         @csrf
                         {{-- Formulario con Livewire --}}
-                        @livewire('treatment-selector')
+                        @livewire('treatment-selector', ['sessionTreatmentId' => $sessionTreatmentId ?? null])
+
                         <br>
                         {{-- Checkbox de política de privacidad --}}
 

@@ -27,12 +27,23 @@ class AppointmentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id = null)
+    public function create(Request $request)
     {
-        //dd("id:", $id);
+
+        if ($request->has('id_treat')) {
+            session(['id_treat' => $request->id_treat]);
+        }else{
+             session(['id_treat' => null]);
+        }
+
         $physios = User::all()->where('role', 'physio');
         $treats = Treatment::all();
-        return view('clients.newappointment')->with(['physios' => $physios, 'treats' => $treats, 'id' => $id]);
+        
+        return view('clients.newappointment')->with([
+    'physios' => $physios,
+    'treats' => $treats,
+    'sessionTreatmentId' => session('id_treat') // podría ser null
+]);
     }
 
     /**

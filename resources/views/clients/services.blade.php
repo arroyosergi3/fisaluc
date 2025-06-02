@@ -23,7 +23,7 @@
                                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                                             {{ $treat->description }}
                                         </h5>
-                                    <a href="{{ route('newappointment') }}">
+                                    <a href="{{ route('newappointment', ['id_treat' => $treat->id]) }}">
                                         <x-primary-button> Pedir cita
                                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
