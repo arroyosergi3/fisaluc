@@ -42,13 +42,11 @@ class TreatmentSelector extends Component
 
     public function updatedSelectedPhysio($physioId)
     {
-        // Actualizar las horas ocupadas cada vez que se cambie el fisioterapeuta
         $this->updateBusyHours();
     }
 
     public function updatedSelectedDate($date)
     {
-        // Actualizar las horas ocupadas cada vez que se cambie la fecha
         $this->updateBusyHours();
         $dayOfWeek = Carbon::parse($date)->dayOfWeek; // 0 = domingo, 6 = sábado
 
@@ -68,20 +66,15 @@ class TreatmentSelector extends Component
                 ->whereDate('date', $this->selectedDate)
                 ->pluck('time')
                 ->map(function ($time) {
-                    return \Carbon\Carbon::parse($time)->format('H:i'); // Formato adecuado
+                    return Carbon::parse($time)->format('H:i'); // Formato adecuado
                 })
                 ->toArray();
         }
     }
 
-
-
-
     public function render()
     {
-
        // dd("Cargando Livewire");
-
         return view('livewire.treatment-selector');
     }
 }

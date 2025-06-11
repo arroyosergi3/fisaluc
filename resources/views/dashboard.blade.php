@@ -124,7 +124,7 @@
                         </p>
                         <h2 class="text-2xl md:text-3xl font-semibold mb-4">Somos más que fisaluc</h2>
                         <p class="text-base leading-relaxed">
-                            Después de años de estudio y práctica, María y Javier decidieron que era el momento de dar
+                            Después de años de estudio y práctica, Miriam y Alejandro decidieron que era el momento de dar
                             el siguiente paso en sus carreras. Compartían una visión clara: crear un espacio donde los
                             pacientes no solo encontraran alivio a sus dolencias, sino que también recibieran un trato
                             cálido y personalizado.
